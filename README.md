@@ -23,8 +23,10 @@ $ git init
 2. Create a bare GitHub repo (no `.gitignore`, `README.md`, `CHANGELOG.md`, or license) and copy the ssh address to assign to your local clone with `git remote add origin <paste-your-ssh-address-here>`
 
 3. `npm install` to add project dependencies to your local machine.
+   KB: two additional packages added: npm install @faker-js/faker --save-dev, npm install bcrypt@4.0.1
 
 4. Choose a name for your local database instance and edit `db/index.js` to assign the name to `DB_NAME`. Next, run `createdb <your-db-name-goes-here>` from your command line to spin up your database.
+   KB: DB_NAME is set to 'bookwander' in db\client.js. So run: createdb bookwander (after running npm install in step 3)
 
 5. `npm run start:dev` will build your React app and start your express server in concurrent mode (meaning that both processes run in the same terminal window). Once this command is running, you can start developing! `nodemon` and `react-scripts` will listen to file changes and update continuously (hot-module-reloading).
 
