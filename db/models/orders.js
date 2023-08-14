@@ -11,6 +11,7 @@ module.exports = {
   attachDetailsToOrders,
   getAllOrdersByUser,
   getOrderByOrderId,
+  getUserOrdersByStatus,
 };
 
 let currentDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
@@ -42,7 +43,11 @@ async function createOrder({ status, userid, lastupdate }) {
 async function getAllOrders() {
   // select and return an array of all orders
   try {
-    const { rows: orders } = await client.query(`SELECT * FROM orders;`);
+    const { rows: orders } = await client.query(`
+    SELECT orders.id, status, userid, u.username, lastupdate
+      FROM orders
+      JOIN users u ON u.id=orders.userid
+    ;`);
 
     return orders;
   } catch (error) {
@@ -127,6 +132,35 @@ async function getOrderByOrderId({ id }) {
 
     await attachDetailsToOrders(orders);
 
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserOrdersByStatus(status, userid) {
+  // select and return an array of orders for the current user, include orderdetails
+  // if userid is not passed as a parameter, try to get it from the global BWUSERID
+  console.log("getUserOrdersByStatus > ", status, userid);
+  if (!userid) {
+    let userid = sessionStorage.getItem("BWUSERID");
+  }
+  if (!userid || userid < 1) return [];
+  // make sure userid is an integer, and status is uppercase
+  userid = parseInt(userid);
+  status = status.toUpperCase();
+
+  try {
+    const { rows: orders } = await client.query(
+      `
+    SELECT * FROM orders
+      WHERE status=$1
+      AND userid=${userid}
+    ;`,
+      [status]
+    );
+
+    await attachDetailsToOrders(orders);
     return orders;
   } catch (error) {
     throw error;
