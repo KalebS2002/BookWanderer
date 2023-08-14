@@ -5,6 +5,7 @@ const {
   getAllOrders,
   getAllOrdersByUser,
   getOrderByOrderId,
+  getUserOrdersByStatus,
 } = require("../db");
 
 ordersRouter.use((req, res, next) => {
@@ -51,6 +52,26 @@ ordersRouter.get("/id/:id", async (req, res, next) => {
     const userOrder = await getOrderByOrderId({ id: parseInt(req.params.id) });
 
     res.send({ userOrder });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/orders/status/:status/:id - Get an order matching status (CURRENT or PURCHASED) and userid, include orderdetails
+ordersRouter.get("/status/:status/:userid", async (req, res, next) => {
+  console.log(
+    "A request is being made to GET /orders/status/:status/:userid ..."
+  );
+  console.log("req.params : ", req.params);
+  console.log("req.body : ", req.body);
+
+  try {
+    const userOrders = await getUserOrdersByStatus(
+      req.params.status,
+      parseInt(req.params.userid)
+    );
+
+    res.send({ userOrders });
   } catch (error) {
     next(error);
   }
