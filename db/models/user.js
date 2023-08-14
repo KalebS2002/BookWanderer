@@ -1,28 +1,27 @@
+// file:  DB/USER.JS
+
 // grab our db client connection to use with our adapters
 const client = require("../client");
 
 const bcrypt = require("bcrypt");
 const SALT_COUNT = 10;
 
+// add your database adapter fns here
 module.exports = {
-  // add your database adapter fns here
   createUser,
   getAllUsers,
+  getUser,
+  getAllNonAdminUsers,
+  getUserByUsername,
   getUserById,
-  getUserByUsername
 };
 
-//make sure to hash the password before storing it to the database
+// create a new entry in the users table -  make sure to hash the password before storing it to the database
+//  an empty array will be returned if username is already taken
 async function createUser({ username, useremail, password, isadmin }) {
-  // console.log("createUser > u : p", useremail, password);
-  if (!isadmin) {
-    isadmin = false;
-  }
-  // if not using bcrypt:
+  // if not using bcrypt, then uncomment this next line
   // const hashedPassword = password;
-  // inside of createUser({ username, password}) use the bcrypt hash function to generate a hashed password
   const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
-  // console.log("hashedPassword > ", hashedPassword);
 
   try {
     const {
@@ -44,50 +43,124 @@ async function createUser({ username, useremail, password, isadmin }) {
   }
 }
 
+// return an array of all entries in the users table
 async function getAllUsers() {
-  /* this adapter should fetch a list of users from your db */
   try {
     // select and return an array of all users
     const { rows: users } = await client.query(`SELECT * FROM users;`);
-
+    // remove the password for each
+    for (let i = 0; i < users.length; i++) {
+      delete users[i].password;
+    }
     return users;
   } catch (error) {
     throw error;
   }
 }
-async function getUserById(id) {
+
+// return an array of users that are NOT admin users (where isadmin=FALSE)
+async function getAllNonAdminUsers() {
   try {
-    const {rows: [user]} = await client.query(`
-      SELECT *
-      FROM users
-      WHERE id = $1;
-    `, [id]);
-    // if it doesn't exist, return null
-    if (!user) return null;
-    // if it does:
-    // delete the 'password' key from the returned object
-    delete user.password; 
-    console.log(user)
-    return user;  
+    // select and return an array of all users
+    const { rows: users } = await client.query(
+      `SELECT id FROM users WHERE isadmin=FALSE;`
+    );
+    // remove the password for each
+    for (let i = 0; i < users.length; i++) {
+      delete users[i].password;
+    }
+    return users;
   } catch (error) {
     throw error;
   }
 }
 
 async function getUserByUsername(username) {
-  // first get the user
+  // return an array of users (should only be one match) with the given username
+  //   example:   [ { id: 7 } ]
   try {
-    const {rows} = await client.query(`
-      SELECT *
-      FROM users
-      WHERE username = $1;
-    `, [username]);
-    // if it doesn't exist, return null
-    if (!rows || !rows.length) return ;
+    // select and return an array of all users
+    const { rows: user } = await client.query(
+      `SELECT * FROM users WHERE username=$1;
+      `,
+      [username]
+    );
 
-    const [user] = rows;
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// select a user by username/password.
+// if match found, and password matches:   return the user object
+//   example:  {  id: 5,  username: 'karla',  useremail: 'karla@none.com',  isadmin: false )
+// if not found, or password does not match:   return null
+async function getUser({ username, password }) {
+  // console.log("getUser > ", username, " > ", password);
+  try {
+    const user = await getUserByUsername(username);
+
+    if (!user) {
+      return null;
+    }
+    //  verify the password against the hashed password
+    const hashedPassword = user.password;
+    let passwordsMatch = await bcrypt.compare(password, hashedPassword);
+
+    if (!passwordsMatch) {
+      // return new Error({ message: "password match failure" });
+      return null;
+    }
     delete user.password;
-    console.log(user)
+    // console.log("user : ", user);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// select a user using the user's username. Return the user object.
+// return null if there is no matching user
+async function getUserByUsername(userName) {
+  // console.log("getUserByUsername > ", userName);
+
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      SELECT * FROM users
+      WHERE username=$1
+    `,
+      [userName]
+    );
+
+    if (!user) {
+      return null;
+    }
+    // console.log("getUserByUsername > return user : ", user);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// select a user by id. Return the user object (or null if not found).  Do NOT return the password
+async function getUserById(userId) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+      SELECT * FROM users WHERE id=${userId}
+    `);
+
+    if (!user) {
+      return null;
+    }
+
+    delete user.password;
     return user;
   } catch (error) {
     throw error;
