@@ -8,6 +8,8 @@ module.exports = {
   // add your database adapter fns here
   createUser,
   getAllUsers,
+  getUserById,
+  getUserByUsername
 };
 
 //make sure to hash the password before storing it to the database
@@ -49,6 +51,44 @@ async function getAllUsers() {
     const { rows: users } = await client.query(`SELECT * FROM users;`);
 
     return users;
+  } catch (error) {
+    throw error;
+  }
+}
+async function getUserById(id) {
+  try {
+    const {rows: [user]} = await client.query(`
+      SELECT *
+      FROM users
+      WHERE id = $1;
+    `, [id]);
+    // if it doesn't exist, return null
+    if (!user) return null;
+    // if it does:
+    // delete the 'password' key from the returned object
+    delete user.password; 
+    console.log(user)
+    return user;  
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserByUsername(username) {
+  // first get the user
+  try {
+    const {rows} = await client.query(`
+      SELECT *
+      FROM users
+      WHERE username = $1;
+    `, [username]);
+    // if it doesn't exist, return null
+    if (!rows || !rows.length) return ;
+
+    const [user] = rows;
+    delete user.password;
+    console.log(user)
+    return user;
   } catch (error) {
     throw error;
   }
