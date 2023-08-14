@@ -11,3 +11,73 @@
   color: var(--green);
   padding: 1rem;
 }
+
+/* nav section starts here */
+
+#title{
+  color: black;
+  font-size: 50px;
+  font-family: 'Great Vibes', cursive;
+}
+
+nav{
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px;
+border-bottom: 2px solid black;
+
+}
+
+#navSelections{
+  font-family: 'Quicksand', sans-serif;
+  transition: 0.7s;
+}
+
+.link{
+  text-decoration: none;
+  color: darkgoldenrod;
+  margin: 70px;
+  transition: 0.7s;
+}
+
+.link:hover{
+  text-shadow: 12px 12px 12px grey;
+}
+#websiteLogo{
+ height: 50px;
+ border-radius: 90%;
+}
+#logoSection{
+  display: flex;
+}
+
+/* footer section start here */
+
+/* footer{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: black;
+  height: auto;
+  width: 100vw;
+  padding-top: 40px; 
+   color: #fff;
+}
+.footerContent{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  background-color: black;
+}
+.footerContent h3{
+  background-color: black;
+  color: white;
+  font-size: 2.1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  line-height: 3rem;
+} */
