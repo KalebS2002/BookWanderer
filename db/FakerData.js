@@ -8,30 +8,21 @@ const { faker } = require("@faker-js/faker");
 module.exports = {
   createFakeUserObject,
   createFakeFixedUser,
-  createFakeProductsObject,
+  createFakeFixedAdmUser,
+  createFakeProductObject,
+  createFakePurchasedOrderObject,
+  createRecentDatestring,
+  createFakeOrderDetailObject,
 };
 
-const bookGenres = [
-  "Action and Adventure",
-  "Art and Photography",
-  "Auotbiography and Memoir",
-  "Biography",
-  "Childrens",
-  "Fantasy",
-  "Food and Drink",
-  "Graphic Novel",
-  "Historical Fiction",
-  "Horror",
-  "Magical Realism",
-  "Mystery",
-  "Romance",
-  "Science Fiction",
-  "Short Story",
-  "Thriller Suspense",
-  "Young Adult",
-];
+// currentDate in YYYY-MM-DD format
+let currentDate = new Date().toISOString().slice(0, 10);
 
-const bookCats = ["Hardback", "Paperback", "Audio"];
+function createRecentDatestring() {
+  let recentDate = faker.date.recent({ days: 10 }); // Date obj:  '2023-01-29T06:12:12.829Z'
+  // return YYYY-MM-DD string
+  return recentDate.toISOString().slice(0, 10);
+}
 
 function createFakeUserObject() {
   return {
@@ -42,53 +33,54 @@ function createFakeUserObject() {
   };
 }
 
-function createFakeFixedUser(pWhichUser) {
-  const aryUsers = [
-    {
-      username: "baaji",
-      useremail: "baaji@none.com",
-      password: "12345",
-      isadmin: false,
-    },
-    {
-      username: "kaleb",
-      useremail: "kaleb@none.com",
-      password: "12345",
-      isadmin: false,
-    },
-    {
-      username: "karla",
-      useremail: "karla@none.com",
-      password: "12345",
-      isadmin: false,
-    },
-    {
-      username: "nash",
-      useremail: "nash@none.com",
-      password: "12345",
-      isadmin: false,
-    },
-    {
-      username: "savstew",
-      useremail: "savstew@none.com",
-      password: "12345",
-      isadmin: false,
-    },
-  ];
-  return aryUsers[pWhichUser];
+function createFakeFixedUser(curUser) {
+  let retObj = { username: curUser };
+  retObj.useremail = curUser + "@none.com";
+  retObj.password = "12345";
+  retObj.isadmin = false;
+  return retObj;
 }
 
-function createFakeProductsObject() {
+function createFakeFixedAdmUser(curUser) {
+  let retObj = { username: curUser + "adm" };
+  retObj.useremail = curUser + "@none.com";
+  retObj.password = "12345";
+  retObj.isadmin = true;
+  return retObj;
+}
+
+const bookCats = ["Hardback", "Paperback", "Audio"];
+
+function createFakeProductObject(bookArray) {
   return {
     title: faker.commerce.productName(),
     author: faker.person.firstName() + " " + faker.person.lastName(),
     price: faker.number.float({ min: 1, max: 85, precision: 0.01 }),
-    category: faker.helpers.arrayElement(bookGenres),
+    category: faker.helpers.arrayElement(bookArray),
     format: faker.helpers.arrayElement(bookCats),
     overview: faker.lorem.paragraph({ min: 1, max: 3 }),
     isactive: true,
-    qtyavailable: faker.number.int({ min: 0, max: 55 }),
+    qtyavailable: faker.number.int({ min: 1, max: 55 }),
     imageurl: faker.image.urlPicsumPhotos({ width: 200, height: 300 }),
+  };
+}
+
+function createFakeOrderDetailObject(ordId, prodAry) {
+  // ordId = a valid order id, prodAry = array of all active product ids
+  return {
+    orderid: ordId,
+    productid: faker.helpers.arrayElement(prodAry),
+    quantity: faker.number.int({ min: 1, max: 5 }),
+    itemprice: faker.number.float({ min: 1, max: 85, precision: 0.01 }),
+  };
+}
+
+function createFakePurchasedOrderObject(userId) {
+  userId = parseInt(userId);
+  return {
+    userid: userId,
+    status: "PURCHASED",
+    lastupdate: createRecentDatestring(),
   };
 }
 

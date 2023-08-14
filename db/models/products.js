@@ -1,10 +1,13 @@
+// file:  DB/PRODUCTS.JS
+
 // grab our db client connection to use with our adapters
 const client = require("../client");
 
+// add your database adapter fns here
 module.exports = {
-  // add your database adapter fns here
   createProduct,
   getAllProducts,
+  getAllActiveProducts,
 };
 
 async function createProduct({
@@ -18,10 +21,7 @@ async function createProduct({
   qtyavailable,
   imageurl,
 }) {
-  // make sure that price is a float value, not a string
-  price = parseFloat(price);
-  if (!isactive) isactive = true;
-
+  // create a new products record.  Only an Admin user sh be allowed to do this
   try {
     const {
       rows: [product],
@@ -51,10 +51,22 @@ async function createProduct({
 }
 
 async function getAllProducts() {
-  /* this adapter should fetch a list of users from your db */
+  // return an array of ALL products (both active and inactive)
   try {
-    // select and return an array of all products
     const { rows: products } = await client.query(`SELECT * FROM products;`);
+
+    return products;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllActiveProducts() {
+  // return an array of products that are ACTIVE
+  try {
+    const { rows: products } = await client.query(
+      `SELECT * FROM products WHERE isactive=TRUE;`
+    );
 
     return products;
   } catch (error) {
