@@ -24,13 +24,13 @@ const Nav = () => {
             <Link className="link" to="/landingPage">
               Home
             </Link>
-            <Link className="link" to="/">
+            <Link className="link" to="/products">
               Products
             </Link>
             <Link className="link" to="/">
               About
             </Link>
-            <Link className="link" to="/">
+            <Link className="link" to="/login-signup">
               Login/SignUp
             </Link>
           </div>

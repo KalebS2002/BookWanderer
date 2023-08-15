@@ -9,14 +9,15 @@ import {
 // you can think of that directory as a collection of api adapters
 // where each adapter fetches specific info from our express server's /api route
 import { getAPIHealth } from "../axios-services";
-
-import Login from "./Login";
-
 import "../style/App.css";
+import "../style/Login_Signup.css";
+import "../style/Products.css";
+import "../style/Nav.css";
 import LandingPage from "./LandingPage";
 import Footer from "./Footer";
 import Nav from "./Nav";
-import "../style/Login_Signup.css";
+import Login from "./Login";
+import Products from "./Products";
 
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
@@ -32,18 +33,18 @@ const App = () => {
   });
 
   return (
+    //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
     <>
       <BrowserRouter>
-        <div id="topOfPage">
-          <Nav />
-        </div>
+        <Nav />
 
-        <div id="bottomOfPage">{/* <Footer /> */}</div>
-
-        <Route path="/landingPage">
-          <LandingPage />
+        <Route path="/landingPage"></Route>
+        <Route path="/products">
+          <Products />
         </Route>
-        <Route></Route>
+        <Route path="/login-signup">
+          <Login />
+        </Route>
       </BrowserRouter>
     </>
   );
