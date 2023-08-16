@@ -21,7 +21,7 @@ usersRouter.get("/", async (req, res, next) => {
 });
 
 // POST /api/users/register
-router.post('/register', async (req, res, next) => {
+usersRouter.post('/register', async (req, res, next) => {
     const { username, password, useremail } = req.body;
   
     try {
@@ -59,7 +59,7 @@ router.post('/register', async (req, res, next) => {
   });
 
   // POST /api/users/login
-router.post('/login', async(req, res, next) => {
+usersRouter.post('/login', async(req, res, next) => {
   try {
     const user = await getUserByUsername(req.body.username);
       console.log(user)
