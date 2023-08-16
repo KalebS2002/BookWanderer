@@ -12,7 +12,8 @@ module.exports = {
   getAllActiveProducts,
   getProductsByTitle,
   updateProduct,
-  destroyProduct
+  destroyProduct,
+  deleteProduct
 };
 
 async function createProduct({
@@ -88,17 +89,6 @@ async function getProductsByAuthor(author) {
   }
 }
 
-async function getAllActiveProducts(isactive) {
-  try {
-    const {rows} = await client.query(`
-      SELECT * FROM products
-      WHERE isactive = $1
-    `, [isactive]);
-    return rows;
-  } catch (error) {
-    throw error;
-  }
-} 
 
 async function getProductsByTitle(title) {
   try {
@@ -193,8 +183,23 @@ async function getAllActiveProducts() {
     const { rows: products } = await client.query(
       `SELECT * FROM products WHERE isactive=TRUE;`
     );
-
+console.log(products)
     return products;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// The deleteProduct function will replace destroyProduct. 
+// The team decided it would be better to make a product inactive rather than delete it from the database
+async function deleteProduct(id) {
+  try {
+    const updates = {
+      isactive: false
+    };
+
+    const updatedProduct = await updateProduct(id, updates);
+    return updatedProduct;
   } catch (error) {
     throw error;
   }
