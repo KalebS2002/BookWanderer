@@ -13,11 +13,13 @@ import "../style/App.css";
 import "../style/Login_Signup.css";
 import "../style/Products.css";
 import "../style/Nav.css";
+import "../style/ViewProduct.css";
 import LandingPage from "./LandingPage";
 import Footer from "./Footer";
 import Nav from "./Nav";
 import Login from "./Login";
 import Products from "./Products";
+import ViewProduct from "./ViewProduct";
 
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
@@ -32,8 +34,11 @@ const App = () => {
     };
   });
 
+  const [currentProduct, setCurrentProduct] = useState({});
+
   return (
     //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
+    //think of props that need to be passed through each comp ex: <Cart isLoggedIn={isLoggedIn}/>
     <>
       <BrowserRouter>
         <Nav />
@@ -44,6 +49,9 @@ const App = () => {
         </Route>
         <Route path="/login-signup">
           <Login />
+        </Route>
+        <Route path="viewPost">
+          <ViewProduct />
         </Route>
       </BrowserRouter>
     </>
