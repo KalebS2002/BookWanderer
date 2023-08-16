@@ -44,6 +44,8 @@ router.post('/register', async (req, res, next) => {
         isadmin
       });
   
+
+
       res.send({ 
         message: "thank you for signing up",
         user: {
@@ -56,4 +58,29 @@ router.post('/register', async (req, res, next) => {
       } 
   });
 
+  // POST /api/users/login
+router.post('/login', async(req, res, next) => {
+  try {
+    const user = await getUserByUsername(req.body.username);
+      console.log(user)
+      if (!user) {
+          next({
+              message: 'That user does not exist, please try another username.',
+          });
+      }
+
+      const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+
+      if (!isPasswordValid) {
+          next({
+              message: 'Error logging in, please check your information and try again.',
+          });
+      }
+
+      res.send({ message: "you're logged in!", user:user });
+
+  } catch (error) {
+      next(error);
+  }
+})
 module.exports = usersRouter;
