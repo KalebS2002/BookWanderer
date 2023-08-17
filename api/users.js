@@ -1,6 +1,8 @@
 const express = require("express");
 const usersRouter = express.Router();
 
+const bcrypt = require("bcrypt");
+
 const { getAllUsers, getUserByUsername, createUser } = require("../db");
 
 usersRouter.use((req, res, next) => {
@@ -21,66 +23,71 @@ usersRouter.get("/", async (req, res, next) => {
 });
 
 // POST /api/users/register
-usersRouter.post('/register', async (req, res, next) => {
-    const { username, password, useremail } = req.body;
-  
-    try {
-      const isadmin = false;
-      const _user = await getUserByUsername(username)
+usersRouter.post("/register", async (req, res, next) => {
+  const { username, password, useremail } = req.body;
 
-      if (_user) {
-        res.send({
-            message: `User ${username} is already taken.`,
-            name: 'UserTakenError',
-            error: 'UserTakenError'
-        });
-        throw new Error('UserTakenError')
-      }
+  try {
+    const isadmin = false;
+    const _user = await getUserByUsername(username);
 
-      const user = await createUser({
-        username,
-        useremail,
-        password,
-        isadmin
+    if (_user) {
+      return next({
+        message: `User ${username} is already taken.`,
+        name: "UserTakenError",
+        error: "UserTakenError",
       });
-  
+    }
 
+    const user = await createUser({
+      username,
+      useremail,
+      password,
+      isadmin,
+    });
 
-      res.send({ 
-        message: "thank you for signing up",
-        user: {
-            username: user.username,
-            useremail: user.useremail
-        } 
-      });
-    }  catch ({ name, message}) {
-        next({ name, message})
-      } 
-  });
+    res.send({
+      message: "REGISTRATION SUCCESSFUL!  Thank you for signing up",
+      user: {
+        userid: user.id,
+        username: user.username,
+        useremail: user.useremail,
+      },
+    });
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
 
-  // POST /api/users/login
-usersRouter.post('/login', async(req, res, next) => {
+// POST /api/users/login
+usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserByUsername(req.body.username);
-      console.log(user)
-      if (!user) {
-          next({
-              message: 'That user does not exist, please try another username.',
-          });
-      }
 
-      const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+    if (!user) {
+      return next({
+        message: "That user does not exist, please try another username.",
+      });
+    }
 
-      if (!isPasswordValid) {
-          next({
-              message: 'Error logging in, please check your information and try again.',
-          });
-      }
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
 
-      res.send({ message: "you're logged in!", user:user });
+    if (!isPasswordValid) {
+      return next({
+        message:
+          "ERROR:  password does not match. Please check your information and try again.",
+      });
+    }
 
+    delete user.password;
+    delete user.isadmin;
+    console.log(user);
+    res.send({ user, message: "SUCCESSFULLY logged in!" });
   } catch (error) {
-      next(error);
+    next(error);
   }
-})
+});
+
 module.exports = usersRouter;
