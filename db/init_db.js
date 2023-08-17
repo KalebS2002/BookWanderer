@@ -159,6 +159,7 @@ async function createCategories() {
 
 async function createInitialUsers() {
   console.log("Entered createInitialUsers : ", Date.now());
+  await createUser(createFakeFixedUser("guest99"));
 
   for (let i = 0; i < testUserNames.length; i++) {
     await createUser(createFakeFixedUser(testUserNames[i]));

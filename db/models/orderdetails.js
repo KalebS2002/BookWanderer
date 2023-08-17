@@ -9,6 +9,7 @@ module.exports = {
   getAllOrderDetails,
   getOrderDetailsByOrderId,
   getOrderDetailsByIds,
+  updateOrderDetails,
   deleteOrderDetails,
 };
 
@@ -19,6 +20,8 @@ async function createOrderDetailItem({
   itemprice,
 }) {
   // add one new order detail item to an existing orderid
+  // OUTPUT:  return an array of the orderdetails item that was added
+  //          returns an empty array if there was conflict.
   try {
     const {
       rows: [OrderDetailItem],
@@ -66,7 +69,7 @@ async function getOrderDetailsByOrderId(pOrderId) {
 }
 
 async function getOrderDetailsByIds(orderid, productid) {
-  // select and return one orderdetails record matching orderid and productid
+  // select and return one orderdetails record object matching a specific orderid and productid
   try {
     const { rows: orderdetails } = await client.query(`
      SELECT * FROM orderdetails
@@ -80,44 +83,41 @@ async function getOrderDetailsByIds(orderid, productid) {
   }
 }
 
-// async function updateRoutineActivity({ id, ...fields }) {
-//   // Find the routine_activity with id equal to the passed in id
+async function updateOrderDetails({ orderid, productid, ...fields }) {
+  // Update orderdetails entry:   orderid and primary key comprise the primary key for this table
+  // remove these two primary key fields from the passedin fields object, so they are not part of setString
+  delete fields.orderid;
+  delete fields.productid;
 
-//   delete fields.id; // remove id from the fields object, so it is not part of setString
-//   // console.log("updateRoutineActivity > id : ", id);
-//   // console.log("updateRoutineActivity > fields : ", fields);
+  // Update quantity and/or item price
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
-//   // Update the count or duration as necessary
-//   const setString = Object.keys(fields)
-//     .map((key, index) => `"${key}"=$${index + 1}`)
-//     .join(", ");
-//   // console.log("updateRoutineActivity > setString: ", setString);
-//   // return early if this is called without fields
-//   if (setString.length === 0) {
-//     return;
-//   }
+  // return early if this is called without fields
+  if (setString.length === 0) {
+    return;
+  }
 
-//   try {
-//     const {
-//       rows: [routine_activity],
-//     } = await client.query(
-//       `
-//     UPDATE routine_activities
-//     SET ${setString}
-//     WHERE id=${id}
-//     RETURNING *;
-//   `,
-//       Object.values(fields)
-//     );
-//     // console.log(
-//     //   "updateRoutineActivity > routine_activity : ",
-//     //   routine_activity
-//     // );
-//     return routine_activity;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+  try {
+    const {
+      rows: [orderdetail],
+    } = await client.query(
+      `
+    UPDATE orderdetails
+    SET ${setString}
+    WHERE orderid=${orderid}
+    AND productid=${productid}
+    RETURNING *;
+  `,
+      Object.values(fields)
+    );
+
+    return orderdetail;
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function deleteOrderDetails(orderid, productid) {
   // remove order detail record from database
