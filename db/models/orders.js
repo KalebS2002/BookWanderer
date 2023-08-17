@@ -20,7 +20,6 @@ async function createOrder({ status, userid, lastupdate }) {
   // add a new order.  Newly created orders will always be status="CURRENT"
   if (!status) status = "CURRENT";
   if (!lastupdate) lastupdate = currentDate;
-  if (!userid) userid = 0; // 0 = guest user
 
   try {
     const {
@@ -139,12 +138,11 @@ async function getOrderByOrderId({ id }) {
 }
 
 async function getUserOrdersByStatus(status, userid) {
-  // select and return an array of orders for the current user, include orderdetails
-  // if userid is not passed as a parameter, try to get it from the global BWUSERID
+  // INPUT:  status - string, either "CURRENT" or "PURCHASED"
+  // OUTPUT:  an an array of orders for the current user, include orderdetails
+  //   if no matching order, then return empty array
   console.log("getUserOrdersByStatus > ", status, userid);
-  if (!userid) {
-    let userid = sessionStorage.getItem("BWUSERID");
-  }
+
   if (!userid || userid < 1) return [];
   // make sure userid is an integer, and status is uppercase
   userid = parseInt(userid);
@@ -161,6 +159,7 @@ async function getUserOrdersByStatus(status, userid) {
     );
 
     await attachDetailsToOrders(orders);
+    console.log("getUserOrdersByStatus > orders:", orders);
     return orders;
   } catch (error) {
     throw error;

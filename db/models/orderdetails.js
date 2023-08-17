@@ -20,6 +20,8 @@ async function createOrderDetailItem({
   itemprice,
 }) {
   // add one new order detail item to an existing orderid
+  // OUTPUT:  return an array of the orderdetails item that was added
+  //          returns an empty array if there was conflict.
   try {
     const {
       rows: [OrderDetailItem],
@@ -67,7 +69,7 @@ async function getOrderDetailsByOrderId(pOrderId) {
 }
 
 async function getOrderDetailsByIds(orderid, productid) {
-  // select and return one orderdetails record matching a specific orderid and productid
+  // select and return one orderdetails record object matching a specific orderid and productid
   try {
     const { rows: orderdetails } = await client.query(`
      SELECT * FROM orderdetails
