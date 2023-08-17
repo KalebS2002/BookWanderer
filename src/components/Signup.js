@@ -1,18 +1,9 @@
 
 import { BrowserRouter, Route, Link } from "react-router-dom"
-
 import Login from "./Login";
 import React, { useState, useEffect } from "react";
 import TreeIcon from '../Images/TreeIcon.png'
-import e from "cors";
-
-
-
-
-
-
-
-
+import { signup } from "../axios-services/users";
 
 async function CheckDataBase(Username, Password){
    console.log('Ready To Check Database Accounts')
@@ -35,9 +26,8 @@ const CheckRequirements = (props) => {
         let element = document.getElementById(table_id)
         if(table_id == element.id){ //Checks if the element is found inside the document 
             let table_value = props[table]._value
-            for(let i = 0; i <= table_value.split('').length; i++){
+            for(let i = 0; i < table_value.split('').length; i++){
                 let stringIndex = table_value[i]
-                
                 let stringValid
                 if (stringIndex != undefined){
                     stringValid = ValidStatments.Numbers.includes(stringIndex) || ValidStatments.Letters.includes(stringIndex)
@@ -64,7 +54,7 @@ const CheckRequirements = (props) => {
         }
     }
     let AllPropsValidated = Object.values(sucess).every(item => item === true)
-    
+
     return AllPropsValidated
    
 }
@@ -72,13 +62,17 @@ const Signup = () => {
     const [Page, setPage] = useState('Signup')
     const [Password, setPassword] = useState({_id: 'Password', _value: ''})
     const [Username, setUsername] = useState({_id: 'Username', _value: ''})
-    function HandleForm(event) {
+    const [email, setEmail] = useState({_id: 'email', _value: ''})
+
+    async function HandleForm(event) {
         event.preventDefault()
-        let failure = CheckRequirements([Username, Password])
+        let success = CheckRequirements([Username, Password])
       
-        if (failure !== false){
-           
-            CheckDataBase(Username, Password)
+        if (!success){
+            await CheckDataBase(Username, Password)
+        }
+        else{
+            let user = await signup({username: Username, password: Password, email: email})
         }
     }
 
@@ -101,6 +95,17 @@ const Signup = () => {
                     placeholder="Username"
                     className="LoginInput"
                     id={Username._id}
+                ></input>
+                <input
+                    autoComplete="email"
+                    value={email._value} onChange={(e) => {setEmail({
+                        _value : e.target.value,
+                        _id : e.target.id
+                    })}}
+                    type="email"
+                    placeholder="Email"
+                    className="LoginInput"
+                    id={email._id}
                 ></input>
                 <input
                     autoComplete="current-password"
