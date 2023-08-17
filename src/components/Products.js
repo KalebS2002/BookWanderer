@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
-const Products = () => {
+const Products = ({ currentProduct, setCurrentProduct }) => {
   const [products, SetProducts] = useState([]);
 
   useEffect(() => {
@@ -23,16 +23,28 @@ const Products = () => {
   console.log(products);
   return (
     <>
-      <body id="productsBody">
+      <div id="productsBody">
         {products.map((product) => (
           <div className="row">
             <div id="productsContainer" key={product.id}>
               <div className="productCard">{product.title}</div>
-              <div className="productCard">{product.imageurl}</div>
+              <div id="imgSection">
+                <img
+                  id="productImg"
+                  src={product.imageurl}
+                  alt={product.title}
+                />
+              </div>
               <div className="productCard">${product.price}</div>
               <div className="cardButtonSection">
-                <button className="cardButtons" id="detailsButton">
-                  <Link className="cardButtons" to="/viewPost">
+                <button
+                  className="cardButtons"
+                  id="detailsButton"
+                  onClick={() => {
+                    setCurrentProduct(product);
+                  }}
+                >
+                  <Link className="cardButtons" to="/viewProduct">
                     See Details
                   </Link>
                 </button>
@@ -45,7 +57,7 @@ const Products = () => {
             </div>
           </div>
         ))}
-      </body>
+      </div>
     </>
   );
 };

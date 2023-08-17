@@ -3,7 +3,7 @@
     justify-content: space-between;
     width: 80%;
     /* min-height: 100vh; */
-    line-height: 1.5;
+    line-height: 1.0;
     flex-wrap: wrap;
    
 }
@@ -12,10 +12,10 @@
 #productsContainer{
    border: 2px solid black;
    margin: 20px;
-   height: 220px;
+   height: 250px;
    max-width: 100%;
    font-size: 12px;
-   width: 50%;
+   width: 100%;
    text-align: center;
 }
 .productCard{
@@ -48,4 +48,10 @@
 }
 .cardButtons:hover{
     color: white;
+}
+/* #imgSection{
+  display: flex;
+} */
+#productImg{
+   width: 65px;
 }
