@@ -1,0 +1,12 @@
+footer{
+   display: flex;
+   text-align: center;
+   color: black;
+   bottom: 0;
+   border: 2px solid black;
+   position: relative;
+   bottom: 0;
+}
+#footerContent{
+    position: absolute;
+}

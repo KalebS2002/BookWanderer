@@ -5,8 +5,9 @@ import {
   Routes,
   Link,
 } from "react-router-dom/cjs/react-router-dom.min";
-
-const Nav = () => {
+import { useState } from "react";
+import Checkout from "./Checkout";
+const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
   return (
     <>
       <div id="nav">
@@ -27,12 +28,23 @@ const Nav = () => {
             <Link className="link" to="/products">
               Products
             </Link>
-            <Link className="link" to="/">
+            <Link className="link" to="/checkout">
               About
             </Link>
+
             <Link className="link" to="/login-signup">
-              Login/SignUp
+              {isLoggedIn ? null : "Login/SignUp"}
             </Link>
+            <Link className="link" to="/cart">
+              {isLoggedIn ? "Cart" : null}
+            </Link>
+            {/* <button
+              onClick={() => {
+                console.log(isLoggedIn);
+              }}
+            >
+              Login
+            </button> */}
           </div>
         </nav>
       </div>
