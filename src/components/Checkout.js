@@ -4,6 +4,7 @@ import { useEffect } from "react";
 //order confirmation:  set CURRENT order to PURCHASED => PATCH => PARAMS :id (orderid) => curl http://localhost:4000/api/orders/3 -X PATCH
 //display current order => order total => Confirm purchase button => API call line 33 (order confirmation) => Thanks for shopping with us
 
+//figure out how and what to fetch
 const Checkout = () => {
   //   useEffect(() => {
   //     async function getTestOrder() {
