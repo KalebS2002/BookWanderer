@@ -2,10 +2,11 @@ const express = require("express");
 const orderdetailsRouter = express.Router();
 
 const {
+  deleteOrderDetails,
   getAllOrderDetails,
   getOrderDetailsByIds,
+  getOrderStatusById,
   updateOrderDetails,
-  deleteOrderDetails,
 } = require("../db");
 
 orderdetailsRouter.use((req, res, next) => {
@@ -28,6 +29,7 @@ orderdetailsRouter.get("/", async (req, res, next) => {
 });
 
 // DELETE /api/orderdetails/:orderid/:productid
+//  remove the specified orderdetails records.  Must be associated with an order that is order.status='CURRENT'
 orderdetailsRouter.delete("/:orderid/:productid", async (req, res, next) => {
   console.log("A request is being made to DELETE /orderdetails ...");
   console.log("req.params : ", req.params);
@@ -37,9 +39,13 @@ orderdetailsRouter.delete("/:orderid/:productid", async (req, res, next) => {
   try {
     const deletedItem = await getOrderDetailsByIds(orderid, productid);
 
-    if (!deletedItem) {
-      next(new Error({ message: "no orderdetail record to delete" }));
-      return;
+    if (!deletedItem || deletedItem.length < 1) {
+      return next({ message: "Unable to find orderdetail record to delete" });
+    }
+
+    let orderStatus = await getOrderStatusById(orderid);
+    if (orderStatus?.status !== "CURRENT") {
+      return next({ message: "Unable to delete. Orderid is not CURRENT." });
     }
 
     await deleteOrderDetails(orderid, productid);
@@ -54,6 +60,7 @@ orderdetailsRouter.delete("/:orderid/:productid", async (req, res, next) => {
 });
 
 // PATCH /api/orderdetails/:orderid/:productid - Update the quantity or itemprice of orderdetails record
+//  update the specified orderdetails records.  Must be associated with an order that is order.status='CURRENT'
 orderdetailsRouter.patch("/:orderid/:productid", async (req, res, next) => {
   console.log(
     "A request is being made to PATCH /orderdetails/:orderid/:productid ... "
@@ -79,9 +86,13 @@ orderdetailsRouter.patch("/:orderid/:productid", async (req, res, next) => {
       updateFields.productid
     );
 
-    if (!originalItem) {
-      next(new Error({ message: "cannot find orderdetails record to update" }));
-      return;
+    if (!originalItem || originalItem.length < 1) {
+      return next({ message: "Unable find orderdetails record to update" });
+    }
+
+    let orderStatus = await getOrderStatusById(updateFields.orderid);
+    if (orderStatus?.status !== "CURRENT") {
+      return next({ message: "Unable to change. Orderid is not CURRENT." });
     }
 
     const updatedODrecord = await updateOrderDetails(updateFields);
@@ -89,8 +100,7 @@ orderdetailsRouter.patch("/:orderid/:productid", async (req, res, next) => {
     if (updatedODrecord) {
       res.send({ updatedODrecord });
     } else {
-      next(new Error({ message: "orderdetails update failed" }));
-      return;
+      return next({ message: "ERROR: orderdetails update failed" });
     }
   } catch (error) {
     next(error);
