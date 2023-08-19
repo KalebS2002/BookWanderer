@@ -9,11 +9,12 @@ const SALT_COUNT = 10;
 // add your database adapter fns here
 module.exports = {
   createUser,
-  getAllUsers,
-  getUser,
   getAllNonAdminUsers,
-  getUserByUsername,
+  getAllUsers,
+  getGuestUserid,
+  getUser,
   getUserById,
+  getUserByUsername,
 };
 
 // create a new entry in the users table -  make sure to hash the password before storing it to the database
@@ -53,6 +54,24 @@ async function getAllUsers() {
       delete users[i].password;
     }
     return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getGuestUserid() {
+  // select the 'guest99' users.id from users table.  return an object with id key, or null
+  // sample return:  { id: 10 }
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `SELECT id FROM users WHERE username=$1;
+      `,
+      ["guest99"]
+    );
+
+    return user;
   } catch (error) {
     throw error;
   }

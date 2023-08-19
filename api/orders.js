@@ -8,8 +8,10 @@ const {
   getAllOrdersByUser,
   getOrderByOrderId,
   getOrderDetailsByIds,
+  getOrderStatusById,
   getUserByUsername,
   getUserOrdersByStatus,
+  setCurrentOrderToPurchased,
   updateOrderDetails,
 } = require("../db");
 
@@ -101,9 +103,6 @@ ordersRouter.post("/", async (req, res, next) => {
       return;
     } else {
       userid = userObj.id;
-      if (sessionStorage) {
-        sessionStorage.setItem("BWUSERID", userid);
-      }
     }
   } else {
     delete req.body.userid;
@@ -176,6 +175,31 @@ ordersRouter.post("/", async (req, res, next) => {
     }
   } catch (error) {
     console.log("error:", error);
+    next(error);
+  }
+});
+
+// PATCH /api/orders/:orderid - change the specified orderid's order.status field from CURRENT to PURCHASED
+//  return the updated order if successful
+ordersRouter.patch("/:id", async (req, res, next) => {
+  console.log("A request is being made to PATCH /orders/:id ... ");
+  console.log("req.params : ", req.params);
+  orderid = parseInt(req.params.id);
+
+  try {
+    const orderStatus = await getOrderStatusById(orderid);
+    if (orderStatus?.status !== "CURRENT") {
+      return next({ message: "Unable to change. Orderid is not CURRENT." });
+    }
+
+    const updatedOrder = await setCurrentOrderToPurchased(orderid);
+
+    if (updatedOrder) {
+      res.send({ updatedOrder });
+    } else {
+      return next({ message: "ERROR: orders update failed" });
+    }
+  } catch (error) {
     next(error);
   }
 });

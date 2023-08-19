@@ -2,16 +2,22 @@
 
 // grab our db client connection to use with our adapters
 const client = require("../client");
-const { getUserById, getUserByUsername } = require("./user");
+const { getUserById, getUserByUsername, getGuestUserid } = require("./user");
+const { changeOrderidForDetails } = require("./orderdetails");
 
 // add your database adapter fns here
 module.exports = {
+  attachDetailsToOrders,
   createOrder,
   getAllOrders,
-  attachDetailsToOrders,
   getAllOrdersByUser,
   getOrderByOrderId,
+  getOrderStatusById,
   getUserOrdersByStatus,
+  setCurrentOrderToPurchased,
+  updateCurrentGuestOrderForExistingUser,
+  updateCurrentGuestOrderForNewUser,
+  updateUseridForOrder,
 };
 
 let currentDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
@@ -137,6 +143,36 @@ async function getOrderByOrderId({ id }) {
   }
 }
 
+async function getOrderByOrderId({ id }) {
+  // select and return an order matching the supplied id, include orderdetails
+
+  try {
+    const { rows: orders } = await client.query(
+      `SELECT * FROM orders WHERE id = ${id};`
+    );
+
+    await attachDetailsToOrders(orders);
+
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getOrderStatusById(id) {
+  // select an order by id.  return an object with status key, or null
+  // sample return:  { status: 'CURRENT' }
+  try {
+    const {
+      rows: [order],
+    } = await client.query(`SELECT status FROM orders WHERE id = ${id};`);
+
+    return order;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getUserOrdersByStatus(status, userid) {
   // INPUT:  status - string, either "CURRENT" or "PURCHASED"
   // OUTPUT:  an an array of orders for the current user, include orderdetails
@@ -159,8 +195,178 @@ async function getUserOrdersByStatus(status, userid) {
     );
 
     await attachDetailsToOrders(orders);
-    console.log("getUserOrdersByStatus > orders:", orders);
+    // console.log("getUserOrdersByStatus > orders:", orders);
     return orders;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function setCurrentOrderToPurchased(orderid) {
+  // when user hits 'Confirm Purchase' ...
+  // change the order.status field from CURRENT to PURCHASED, and lastupdate to currentDate
+  // for the orders.id matching the supplied orderid
+  // the API should only make this request with valid data (already verified there is a current order for current user)
+
+  try {
+    const {
+      rows: [order],
+    } = await client.query(
+      `
+    UPDATE orders SET status=$1, lastupdate=$2
+    WHERE id=${orderid}
+    RETURNING *;
+  `,
+      ["PURCHASED", currentDate]
+    );
+
+    return order;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateUseridForOrder(orderid, newUserid) {
+  //
+  try {
+    const {
+      rows: [order],
+    } = await client.query(
+      `
+    UPDATE orders SET userid=$1, lastupdate=$2
+    WHERE id=${orderid}
+    RETURNING *;
+  `,
+      [newUserid, currentDate]
+    );
+
+    console.log("updateUseridForOrder: ", order);
+    return order;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateCurrentGuestOrderForNewUser(newUserId) {
+  // if there is a CURRENT order for 'guest99' user, then change the userid on that order to the newUserId
+  newUserId = parseInt(newUserId);
+  const guestUserid = await getGuestUserid();
+  console.log("updateCurrentGuestOrderForNewUser > guestUserid", guestUserid);
+  console.log("newUserId", newUserId);
+  let guestId = 1;
+
+  if (guestUserid?.id) {
+    guestId = parseInt(guestUserid.id);
+  } else {
+    return null;
+  }
+
+  try {
+    let currentOrder = await getUserOrdersByStatus("CURRENT", guestId);
+    console.log("currentOrder", currentOrder);
+    let currentOrderid = 0;
+    if (!currentOrder || currentOrder.length < 1) {
+      return null;
+    } else {
+      currentOrderid = parseInt(currentOrder[0].id);
+    }
+    console.log("currentOrderid", currentOrderid);
+
+    const order = updateUseridForOrder(currentOrderid, newUserId);
+
+    console.log("updated order: ", order);
+    return order;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateCurrentGuestOrderForExistingUser(newUserId) {
+  // if there is a CURRENT order for 'guest99' user, then change the userid on that order to the newUserId
+  newUserId = parseInt(newUserId);
+  const guestUserid = await getGuestUserid();
+  console.log(
+    "updateCurrentGuestOrderForExistingUser > guestUserid",
+    guestUserid
+  );
+  console.log("newUserId:", newUserId);
+  let guestId = 1;
+
+  // identify the users.id for "guest99" - return if not found
+  if (guestUserid?.id) {
+    guestId = parseInt(guestUserid.id);
+  } else {
+    return null;
+  }
+  console.log("guestId: ", guestId);
+
+  try {
+    // check to see if there is a previously stored CURRENT order for the logged in user
+    let prevOrder = await getUserOrdersByStatus("CURRENT", newUserId);
+    console.log("prevOrder", prevOrder);
+    let prevOrderid = 0;
+    if (prevOrder && prevOrder.length > 0) {
+      prevOrderid = parseInt(prevOrder[0].id);
+    }
+    console.log("prevOrderid:", prevOrderid);
+
+    // check to see if there is a CURRENT order that was started as a guest
+    let currentOrder = await getUserOrdersByStatus("CURRENT", guestId);
+    console.log("currentOrder", currentOrder);
+    let currentOrderid = 0;
+    if (currentOrder && currentOrder.length > 0) {
+      currentOrderid = parseInt(currentOrder[0].id);
+    }
+    console.log("currentOrderid", currentOrderid);
+
+    // if no prevOrder and no curOrder, nothing to change
+    if (prevOrderid < 1 && currentOrderid < 1) return;
+
+    // if only a curOrder, then change the userid on that order to newUserid
+    if (prevOrderid < 1 && currentOrderid > 0) {
+      await updateUseridForOrder(currentOrderid, newUserId);
+      const order = await getUserOrdersByStatus("CURRENT", newUserId);
+      console.log("curOrderOnly: ", order);
+    }
+
+    // if only a prevOrder, then the prevOrder for this user IS the current order, so return it
+    if (prevOrderid > 0 && currentOrderid < 1) {
+      const order = await getUserOrdersByStatus("CURRENT", newUserId);
+      console.log("prevOrderOnly: ", order);
+    }
+
+    // if user has both curOrder (items in guest cart), and prevOrder (prev CURRENT items),
+    // then bring all curOrder items into prevOrder, and delete the curOrder record
+    if (prevOrderid > 0 && currentOrderid > 0) {
+      const order = await updateUseridForOrder(prevOrderid, newUserId);
+      await changeOrderidForDetails(currentOrderid, prevOrderid);
+
+      await deleteOrder(currentOrderid);
+      console.log("both existed - curOrder updated: ", order);
+    }
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteOrder(id) {
+  // delete an order - only called after all orderdetails have been added to a different orderid
+  try {
+    console.log("delete order: ", id);
+    await client.query(
+      `DELETE FROM orderdetails
+         WHERE orderid = ${id};`
+    );
+
+    await client.query(
+      `DELETE FROM orders
+         WHERE id = ${id};`
+    );
+
+    console.log("DELETE orders complete for id:", id);
+    return;
   } catch (error) {
     throw error;
   }
