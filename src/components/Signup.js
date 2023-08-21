@@ -14,11 +14,15 @@ const Signup = () => {
     const [Password, setPassword] = useState("")
     const [Username, setUsername] = useState("")
     const [email, setEmail] = useState("")
+    const [message, setMessage] = useState("")
     async function HandleForm(event) {
         event.preventDefault()
         CheckDataBase(Username, Password)
         let response = await signup(Username, Password, email)
-        console.log(response)
+        if(response.error){
+            if(response.error === "UserTakenError")
+                setMessage(response.message)
+        }
     }
 
     if (Page == 'Login') {
@@ -50,7 +54,7 @@ const Signup = () => {
                     placeholder="Email"
                     className="LoginInput"
                 ></input>
-                <p id="SignupError"></p>
+                <p id="SignupError">{message}</p>
                 <button id="SignupButton" type="submit">Register New Account</button>
                 <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
                 <button name='Login' className="TransferButton" onClick={(e => {

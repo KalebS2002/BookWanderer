@@ -8,7 +8,8 @@ export async function signup(username, password, email){
             password: password, 
             useremail: email
         })
-        sessionStorage.setItem("BWUSERID", data.user.username)
+        if(data.user)
+            sessionStorage.setItem("BWUSERID", data.user.username)
         return data
     }catch (e){
         console.log(e)
