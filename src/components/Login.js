@@ -10,11 +10,13 @@ function Login() {
     const [Page, setPage] = useState('Login')
     const [Password, setPassword] = useState('')
     const [Username, setUsername] = useState('')
+    const [message, setMessage] = useState('')
     
     async function HandleForm(event) {
         event.preventDefault()
         let response = await login(Username, Password)
         console.log(response)
+        setMessage(response.message)
     }
 
     if (Page == 'Signup') {
@@ -46,7 +48,7 @@ function Login() {
                     className="LoginInput"
                     id='Password'
                 ></input>
-                <p id="LoginError"></p>
+                <p id="LoginError">{message}</p>
                 <button id="LoginButton" type="submit">Sign in</button>
                 <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
                 <button name='Signup' className="TransferButton" onClick={(e => {

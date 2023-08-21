@@ -64,17 +64,24 @@ usersRouter.post('/login', async(req, res, next) => {
   try {
     const user = await getUserByUsername(req.body.username);
       if (!user) {
-          next({
-              message: 'That user does not exist, please try another username.',
-          });
+        res.send({
+          message: `That user does not exist, please try another username.`,
+          name: 'UserDoesNotExistError',
+          error: 'UserDoesNotExistError'
+        });
+        throw new Error('UserDoesNotExistError')
       }
-
+      console.log(req.body.password, user.password)
       const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+      console.log(isPasswordValid)
 
       if (!isPasswordValid) {
-          next({
-              message: 'Error logging in, please check your information and try again.',
+          res.send({
+            message: `Error logging in, please check your information and try again.`,
+            name: 'UserPasswordError',
+            error: 'UserPasswordError'
           });
+          throw new Error('UserPasswordError')
       }
 
       res.send({ message: "you're logged in!", user: user});
