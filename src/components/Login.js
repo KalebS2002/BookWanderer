@@ -1,28 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react"
-
-
-
 import { BrowserRouter, Route, Link } from "react-router-dom"
-
 import BackgroundRoses from '../Images/BackgroundRoses.png'
 import TreeIcon from '../Images/TreeIcon.png'
 import react from "react";
 import Signup from "./Signup";
-
-
-
+import { login } from "../axios-services/users";
 
 function Login() {
-
     const [Page, setPage] = useState('Login')
     const [Password, setPassword] = useState('')
     const [Username, setUsername] = useState('')
-
-    function HandleForm(event) {
+    
+    async function HandleForm(event) {
         event.preventDefault()
+        let response = await login(Username, Password)
+        console.log(response)
     }
-
-  
 
     if (Page == 'Signup') {
         return(

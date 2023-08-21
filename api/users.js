@@ -1,5 +1,6 @@
 const express = require("express");
 const usersRouter = express.Router();
+const bcrypt = require("bcrypt")
 
 const { getAllUsers, getUserByUsername, createUser } = require("../db");
 
@@ -62,7 +63,6 @@ usersRouter.post('/register', async (req, res, next) => {
 usersRouter.post('/login', async(req, res, next) => {
   try {
     const user = await getUserByUsername(req.body.username);
-      console.log(user)
       if (!user) {
           next({
               message: 'That user does not exist, please try another username.',
@@ -77,7 +77,7 @@ usersRouter.post('/login', async(req, res, next) => {
           });
       }
 
-      res.send({ message: "you're logged in!", user:user });
+      res.send({ message: "you're logged in!", user: user});
 
   } catch (error) {
       next(error);
