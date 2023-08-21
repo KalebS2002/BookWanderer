@@ -2,10 +2,17 @@ const express = require("express");
 const ordersRouter = express.Router();
 
 const {
+  createOrder,
+  createOrderDetailItem,
   getAllOrders,
   getAllOrdersByUser,
   getOrderByOrderId,
+  getOrderDetailsByIds,
+  getOrderStatusById,
+  getUserByUsername,
   getUserOrdersByStatus,
+  setCurrentOrderToPurchased,
+  updateOrderDetails,
 } = require("../db");
 
 ordersRouter.use((req, res, next) => {
@@ -72,6 +79,126 @@ ordersRouter.get("/status/:status/:userid", async (req, res, next) => {
     );
 
     res.send({ userOrders });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/orders/:userid -
+ordersRouter.post("/", async (req, res, next) => {
+  console.log("A request is being made to POST /orders ...");
+  console.log("req.params : ", req.params);
+  console.log("req.body : ", req.body);
+
+  let userid = req.body.userid;
+  // if there is no userid passed in the req.body, then this is the guest user
+  if (!userid) {
+    let userObj = await getUserByUsername("guest99");
+    if (!userObj?.id) {
+      next(
+        new Error({
+          message: `Userid not provided, or not found in DB.  Valid userid should be provided.`,
+        })
+      );
+      return;
+    } else {
+      userid = userObj.id;
+    }
+  } else {
+    delete req.body.userid;
+  }
+
+  userid = parseInt(userid);
+  let { productid, quantity, itemprice } = req.body;
+  // if any of the parameters are missing, error out
+  if (!productid || !quantity || !itemprice) {
+    next(
+      new Error({
+        message: `Missing parameter(s): productid, quantity, itemprice.`,
+      })
+    );
+    return;
+  }
+  productid = parseInt(productid);
+  quantity = parseInt(quantity);
+
+  try {
+    let orderid = 0;
+    // First, check to see if there is a CURRENT order for the current user
+    let orderReturn = await getUserOrdersByStatus("CURRENT", userid);
+
+    if (orderReturn.length > 0) {
+      // IF there is a CURRENT order for this userid, set orderid from the returned array
+      console.log("user has CURRENT order ", orderReturn[0]);
+      orderid = orderReturn[0].id;
+    } else {
+      // ELSE create a new order, and set orderid based on the new order.id that was created
+      orderReturn = await createOrder({ userid: userid });
+      console.log("new order object ", orderReturn);
+      orderid = orderReturn.id;
+    }
+    console.log("orderid:", orderid);
+
+    // orderid, productid, quantity, itemprice
+    let newDetails = {
+      orderid: orderid,
+      productid: productid,
+      quantity: quantity,
+      itemprice: itemprice,
+    };
+    console.log("API adding > newDetails: ", newDetails);
+    // try to create a new orderdetails record
+    let orderDetail = await createOrderDetailItem(newDetails);
+    // if the create fails (orderDetail is empty), it is because this item already exists in the CURRENT order
+    if (!orderDetail) {
+      console.log("orderDet not added");
+      // so retrieve the current record from the DB
+      orderDetail = await getOrderDetailsByIds(orderid, productid);
+      console.log("orderDetail retrieved: ", orderDetail);
+      if (orderDetail[0]?.quantity) {
+        console.log("updating quantity");
+        // update the quantity to be what the user wants to add, PLUS the number there already are
+        newDetails.quantity += orderDetail[0].quantity;
+      }
+      orderDetail = await updateOrderDetails(newDetails);
+    }
+
+    if (orderDetail) {
+      res.send({ orderDetail });
+      return;
+    } else {
+      next(
+        new Error({
+          message: `DB ERROR: Unable to create orderdetails record.`,
+        })
+      );
+    }
+  } catch (error) {
+    console.log("error:", error);
+    next(error);
+  }
+});
+
+// PATCH /api/orders/:orderid - change the specified orderid's order.status field from CURRENT to PURCHASED
+//  return the updated order if successful
+ordersRouter.patch("/:id", async (req, res, next) => {
+  console.log("A request is being made to PATCH /orders/:id ... ");
+  console.log("req.params : ", req.params);
+  orderid = parseInt(req.params.id);
+
+  try {
+    const orderStatus = await getOrderStatusById(orderid);
+    if (orderStatus?.status !== "CURRENT") {
+      return next({ message: "Unable to change. Orderid is not CURRENT." });
+    }
+
+    const updatedOrder = await setCurrentOrderToPurchased(orderid);
+
+    if (updatedOrder) {
+      res.send({ updatedOrder });
+    } else {
+      return next({ message: "ERROR: orders update failed" });
+    }
   } catch (error) {
     next(error);
   }

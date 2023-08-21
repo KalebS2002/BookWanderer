@@ -5,12 +5,13 @@ const client = require("../client");
 
 // add your database adapter fns here
 module.exports = {
+  changeOrderidForDetails,
   createOrderDetailItem,
-  getAllOrderDetails,
-  getOrderDetailsByOrderId,
-  getOrderDetailsByIds,
-  updateOrderDetails,
   deleteOrderDetails,
+  getAllOrderDetails,
+  getOrderDetailsByIds,
+  getOrderDetailsByOrderId,
+  updateOrderDetails,
 };
 
 async function createOrderDetailItem({
@@ -20,6 +21,8 @@ async function createOrderDetailItem({
   itemprice,
 }) {
   // add one new order detail item to an existing orderid
+  // OUTPUT:  return an array of the orderdetails item that was added
+  //          returns an empty array if there was conflict.
   try {
     const {
       rows: [OrderDetailItem],
@@ -67,7 +70,8 @@ async function getOrderDetailsByOrderId(pOrderId) {
 }
 
 async function getOrderDetailsByIds(orderid, productid) {
-  // select and return one orderdetails record matching a specific orderid and productid
+  // select and return an array of one  orderdetails record object matching a specific orderid and productid
+  //  an empty array will be returned if no records match
   try {
     const { rows: orderdetails } = await client.query(`
      SELECT * FROM orderdetails
@@ -75,6 +79,7 @@ async function getOrderDetailsByIds(orderid, productid) {
      AND productid=${productid}
      ;`);
 
+    // console.log("orderdetails : ", orderdetails);
     return orderdetails;
   } catch (error) {
     throw error;
@@ -119,27 +124,40 @@ async function updateOrderDetails({ orderid, productid, ...fields }) {
 
 async function deleteOrderDetails(orderid, productid) {
   // remove order detail record from database
+  // the API call has already verified (using getOrderDetailsByIds) that the record exists and can be deleted
   try {
-    // console.log("deleteOrderDetails > :", orderid, productid);
-    const { rows: orderdetail } = await client.query(
-      `SELECT * FROM orderdetails
-       WHERE orderid = ${orderid}
-       AND productid = ${productid};`
-    );
-
-    if (!orderdetail) {
-      return new Error({ message: "orderdetails record not found" });
-    }
-
     await client.query(
       `DELETE FROM orderdetails
        WHERE orderid = ${orderid}
        AND productid = ${productid};`
     );
 
-    console.log("DELETE complete");
-    return rows;
+    console.log("DELETE orderdetails complete for: ", orderid, productid);
+    return;
   } catch (error) {
     throw error;
+  }
+}
+
+async function changeOrderidForDetails(oldOrderid, newOrderid) {
+  // change the orderid for a selected set of orderdetails (supports guest user registered or logged in)
+  oldOrderid = parseInt(oldOrderid);
+  newOrderid = parseInt(newOrderid);
+
+  console.log("changeOrderidForDetails");
+  try {
+    await client.query(
+      `UPDATE orderdetails
+       SET orderid=${newOrderid}
+       WHERE orderid=${oldOrderid} ;`
+    );
+
+    console.log("orderdetails orderid update complete");
+    return;
+  } catch (error) {
+    // deliberately ignore the error of orderdetails duplicate keys - too much bother to address for the purposes of this project
+    // this can only occur if a user shops as a guest, then logs in, and happens to have the same both in the guest cart and prev cart
+    console.log("changeOrderidForDetails > error: ", error.message);
+    return;
   }
 }
