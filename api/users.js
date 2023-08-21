@@ -1,7 +1,9 @@
 const express = require("express");
 const usersRouter = express.Router();
-
+const bcrypt = require('bcrypt'); 
 const { getAllUsers, getUserByUsername, createUser } = require("../db");
+const {requireUser, } = require('./adminAccess')
+
 
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /api/users - next() is called ...");
@@ -82,5 +84,16 @@ usersRouter.post('/login', async(req, res, next) => {
   } catch (error) {
       next(error);
   }
+});
+
+// GET /api/users/me
+usersRouter.get('/me', requireUser, async (req, res, next) => {
+  try {
+    res.send(req.user);
+  } catch (error) {
+    next(error)
+  }
 })
+
+
 module.exports = usersRouter;
