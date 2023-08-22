@@ -146,6 +146,45 @@ async function changeOrderidForDetails(oldOrderid, newOrderid) {
 
   console.log("changeOrderidForDetails");
   try {
+    // get an array of newOrderId details objects
+    let { rows: newProds } = await client.query(
+      `SELECT orderid, productid, quantity FROM orderdetails
+       WHERE orderid=${newOrderid} ;`
+    );
+
+    // get an array of oldOrderid details objects
+    let { rows: oldProds } = await client.query(
+      `SELECT orderid, productid, quantity FROM orderdetails
+       WHERE orderid=${oldOrderid} ;`
+    );
+
+    // set an array of new productids
+    let newProdAry = newProds.map(({ productid }) => productid);
+    // set an array of old productids
+    let oldProdAry = oldProds.map(({ productid }) => productid);
+
+    // go through the array of old productids, and check to see if any of these productids already exist in
+    // the newOrderId orderdetails list.  If there is overlap, add the old quantity to the new one, and delete old orderdetails record
+    for (let i = 0; i < oldProdAry.length; i++) {
+      // if the newProdAry includes a product id from the old list
+      if (newProdAry.includes(oldProdAry[i])) {
+        let newPos = newProdAry.indexOf(oldProdAry[i]);
+        let newQty = newProds[newPos].quantity + oldProds[i].quantity;
+        // add the old quantity value to the neworderid for this same productid
+        await client.query(
+          `UPDATE orderdetails
+           SET quantity=${newQty}
+           WHERE orderid=${newOrderid} ;`
+        );
+        // delete the old orderdetails record
+        await client.query(
+          `DELETE FROM orderdetails
+             WHERE orderid = ${oldOrderid}
+             AND productid = ${oldProdAry[i]};`
+        );
+      }
+    }
+
     await client.query(
       `UPDATE orderdetails
        SET orderid=${newOrderid}
@@ -155,8 +194,7 @@ async function changeOrderidForDetails(oldOrderid, newOrderid) {
     console.log("orderdetails orderid update complete");
     return;
   } catch (error) {
-    // deliberately ignore the error of orderdetails duplicate keys - too much bother to address for the purposes of this project
-    // this can only occur if a user shops as a guest, then logs in, and happens to have the same both in the guest cart and prev cart
+    // deliberately ignore any error on this processing (there shouldn't be one, but don't interrupt if there is)
     console.log("changeOrderidForDetails > error: ", error.message);
     return;
   }

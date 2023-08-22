@@ -1,6 +1,6 @@
 // file:  DB/ORDERS.JS
 
-// grab our db client connection to use with our adapters
+// grab db client connection to use with adapters
 const client = require("../client");
 const { getUserById, getUserByUsername, getGuestUserid } = require("./user");
 const { changeOrderidForDetails } = require("./orderdetails");
@@ -227,7 +227,7 @@ async function setCurrentOrderToPurchased(orderid) {
 }
 
 async function updateUseridForOrder(orderid, newUserid) {
-  //
+  // change the userid field associated with an order.id, also set lastupdate to currentDate
   try {
     const {
       rows: [order],
@@ -248,7 +248,9 @@ async function updateUseridForOrder(orderid, newUserid) {
 }
 
 async function updateCurrentGuestOrderForNewUser(newUserId) {
-  // if there is a CURRENT order for 'guest99' user, then change the userid on that order to the newUserId
+  // called used when a new user registers
+  //   if there is a CURRENT order for 'guest99' user, then change the userid on CURRENT order to the newUserId
+  //   no orderdetails changed are needed, because only the userid associated with the order was updated
   newUserId = parseInt(newUserId);
   const guestUserid = await getGuestUserid();
   console.log("updateCurrentGuestOrderForNewUser > guestUserid", guestUserid);
@@ -265,13 +267,14 @@ async function updateCurrentGuestOrderForNewUser(newUserId) {
     let currentOrder = await getUserOrdersByStatus("CURRENT", guestId);
     console.log("currentOrder", currentOrder);
     let currentOrderid = 0;
+    // check to see if there is a CURRENT order for guestId
     if (!currentOrder || currentOrder.length < 1) {
       return null;
     } else {
       currentOrderid = parseInt(currentOrder[0].id);
     }
     console.log("currentOrderid", currentOrderid);
-
+    // change the userid associated with the CURRENT order.id
     const order = updateUseridForOrder(currentOrderid, newUserId);
 
     console.log("updated order: ", order);
@@ -282,23 +285,27 @@ async function updateCurrentGuestOrderForNewUser(newUserId) {
 }
 
 async function updateCurrentGuestOrderForExistingUser(newUserId) {
-  // if there is a CURRENT order for 'guest99' user, then change the userid on that order to the newUserId
+  // called when an existing user logs in
+  // if there is no curOrder (guest) and no prevOrder (CURRENT order.id for this user.id), then nothing to do
+  // if there is ONLY a CURRENT order for guestUser, then change the userid on that order to the newUserId
+  // if there is ONLY a CURRENT order for the now-logged in user, their previous order is now the CURRENT order
+  // if there is both a CURRENT order for guestUser (did some anonymous shopping before they logged in),
+  //   AND there is a CURRENT order for the now-logged-in user (previously left unpurchased items on an order)
+  //  then all orderdetails items associated with the guestUser CURRENT order need to be changed to
+  //   the now-logged-in user's user.id.
   newUserId = parseInt(newUserId);
   const guestUserid = await getGuestUserid();
-  console.log(
-    "updateCurrentGuestOrderForExistingUser > guestUserid",
-    guestUserid
-  );
+  console.log("updCurGuestOrderForExistUser > guestUserid", guestUserid);
   console.log("newUserId:", newUserId);
-  let guestId = 1;
+  let guestId = 0;
 
   // identify the users.id for "guest99" - return if not found
   if (guestUserid?.id) {
     guestId = parseInt(guestUserid.id);
+    console.log("guestId: ", guestId);
   } else {
     return null;
   }
-  console.log("guestId: ", guestId);
 
   try {
     // check to see if there is a previously stored CURRENT order for the logged in user
@@ -335,12 +342,11 @@ async function updateCurrentGuestOrderForExistingUser(newUserId) {
       console.log("prevOrderOnly: ", order);
     }
 
-    // if user has both curOrder (items in guest cart), and prevOrder (prev CURRENT items),
-    // then bring all curOrder items into prevOrder, and delete the curOrder record
+    // if user has both curOrder (items in guest cart), and prevOrder (prev CURRENT items for logged in user),
+    // then bring all curOrder items into prevOrder, and delete the curOrder guestUser record
     if (prevOrderid > 0 && currentOrderid > 0) {
       const order = await updateUseridForOrder(prevOrderid, newUserId);
       await changeOrderidForDetails(currentOrderid, prevOrderid);
-
       await deleteOrder(currentOrderid);
       console.log("both existed - curOrder updated: ", order);
     }
