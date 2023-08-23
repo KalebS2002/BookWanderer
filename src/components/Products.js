@@ -25,9 +25,10 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
     <>
       <div id="productsBody">
         {products.map((product) => (
-          <div className="row">
+          <div className="row" key={product.id}>
             <div id="productsContainer" key={product.id}>
               <div className="productCard">{product.title}</div>
+              <div className="productCard">{product.format}</div>
               <div id="imgSection">
                 <img
                   id="productImg"

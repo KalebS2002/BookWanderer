@@ -5,7 +5,8 @@ import {
   Routes,
   Link,
 } from "react-router-dom/cjs/react-router-dom.min";
-
+import { useState } from "react";
+import Checkout from "./Checkout";
 const Nav = () => {
   return (
     <>
@@ -27,12 +28,22 @@ const Nav = () => {
             <Link className="link" to="/products">
               Products
             </Link>
-            <Link className="link" to="/">
+            {/* <Link className="link" to="/checkout">
               About
-            </Link>
+            </Link> */}
             <Link className="link" to="/login-signup">
-              Login/SignUp
+              Login/ Sign Up
             </Link>
+            <Link className="link" to="/checkout">
+              Cart
+            </Link>
+            {/* <button
+              onClick={() => {
+                console.log(isLoggedIn);
+              }}
+            >
+              Login
+            </button> */}
           </div>
         </nav>
       </div>
