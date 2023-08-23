@@ -7,7 +7,7 @@ import {
 } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 import Checkout from "./Checkout";
-const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
+const Nav = () => {
   return (
     <>
       <div id="nav">
@@ -28,15 +28,14 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             <Link className="link" to="/products">
               Products
             </Link>
-            <Link className="link" to="/checkout">
+            {/* <Link className="link" to="/checkout">
               About
-            </Link>
-
+            </Link> */}
             <Link className="link" to="/login-signup">
-              {isLoggedIn ? null : "Login/SignUp"}
+              Login/ Sign Up
             </Link>
-            <Link className="link" to="/cart">
-              {isLoggedIn ? "Cart" : null}
+            <Link className="link" to="/checkout">
+              Cart
             </Link>
             {/* <button
               onClick={() => {

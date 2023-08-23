@@ -38,7 +38,6 @@ const App = () => {
   });
 
   const [currentProduct, setCurrentProduct] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
@@ -49,7 +48,7 @@ const App = () => {
         <Nav />
 
         <Route path="/landingPage">
-          <LandingPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <LandingPage />
         </Route>
         <Route path="/products">
           <Products
