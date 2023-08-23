@@ -1,0 +1,124 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: 0px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI';
+  resize: none;
+}
+
+
+#FullCart {
+  border: solid;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+
+  flex-wrap: wrap;
+}
+
+
+
+/*Style Options for EMPTY CART/ when the cart has nothing in it. */
+
+
+#EmptyCart .Title {
+  width: 100%;
+  text-align: center;
+  font: 400px;
+}
+
+#EmptyCart .Background {
+  width: 100%;
+  height: 74vh;
+}
+
+
+/*Style Options for FULL CART/ when the cart has stuff in it.*/
+
+
+/*The parentNode*/
+#FullCart .order {
+  border: solid;
+  width: 22vh;
+  text-align: center;
+}
+
+
+/* Do not Change */
+#FullCart #QuanitySection {
+  display: flex;
+
+}
+
+/*The Quanity Text - */
+#FullCart #Quantity {
+  background-color: aqua;
+  border: solid;
+  text-align: center;
+}
+
+/* The Add Quantity Button*/
+#FullCart #AddQuantity {
+  background-color: green;
+  border: solid;
+  width: 30px;
+}
+
+/* The Subtract Quantity Button*/
+#FullCart #SubtractQuantity {
+  background-color: red;
+  border: solid;
+  width: 30px;
+
+}
+
+
+/*The childrenNodes*/
+#FullCart .content {
+  border: 1px;
+  width: 100%;
+}
+
+
+
+/*Remove Button*/
+#FullCart #remove {
+  border: solid;
+
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/*Title of Order*/
+#FullCart #Title {
+  color: black;
+}
+
+/*Author Of Order*/
+#FullCart #Author {
+  color: black;
+}
+
+/*Image Of Order*/
+
+#FullCart #Image {
+  color: black;
+}
+
+/*Amount Of Order*/
+#FullCart #Amount {
+  color: black;
+}
+
+/*Price Of Order*/
+#FullCart #Price {
+  color: black;
+}
+
+/*Total Of Order*/
+#FullCart #Total {
+  color: black;
+}
