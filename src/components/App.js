@@ -68,6 +68,7 @@ const App = () => {
         <Route path="/checkout">
           <Checkout />
         </Route>
+        <Route path="/cart"></Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>
     </>

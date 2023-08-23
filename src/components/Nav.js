@@ -35,8 +35,12 @@ const Nav = () => {
               Login/ Sign Up
             </Link>
             <Link className="link" to="/checkout">
+              Checkout
+            </Link>
+            <Link className="link" to="/cart">
               Cart
             </Link>
+
             {/* <button
               onClick={() => {
                 console.log(isLoggedIn);
