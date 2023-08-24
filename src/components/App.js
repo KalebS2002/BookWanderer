@@ -24,6 +24,7 @@ import Signup from "./Signup";
 import Products from "./Products";
 import ViewProduct from "./ViewProduct";
 import Checkout from "./Checkout";
+import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
 
 const App = () => {
@@ -77,7 +78,9 @@ const App = () => {
         <Route path="/orderHistory">
           <OrderHistory />
         </Route>
-        <Route path="/cart">{/* insert Cart.js here */}</Route>
+        <Route path="/cart">
+          <Cart />
+          {/* insert Cart.js here */}</Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>
     </>
