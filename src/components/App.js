@@ -2,12 +2,10 @@ import React, { useState, useEffect, Component } from "react";
 import {
   BrowserRouter,
   Route,
-  Routes,
+  Redirect,
   Link,
 } from "react-router-dom/cjs/react-router-dom.min";
 // getAPIHealth is defined in our axios-services directory index.js
-// you can think of that directory as a collection of api adapters
-// where each adapter fetches specific info from our express server's /api route
 import { getAPIHealth } from "../axios-services";
 import "../style/App.css";
 import "../style/Login_Signup.css";
@@ -27,8 +25,22 @@ import Checkout from "./Checkout";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
 
+sessionStorage.setItem("BWUSERID", 1);
+console.log("BWUSERID init:", sessionStorage.getItem("BWUSERID"));
+
+const Logout = ({ isLoggedIn, setIsLoggedIn }) => {
+  useEffect(() => {
+    sessionStorage.clear();
+    sessionStorage.setItem("BWUSERID", 1);
+    setIsLoggedIn(false);
+  }, [isLoggedIn]);
+  return <Redirect to="/landingPage" />;
+};
+
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
+  const [currentProduct, setCurrentProduct] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     // follow this pattern inside your useEffect calls:
@@ -40,18 +52,13 @@ const App = () => {
     };
   });
 
-  const [currentProduct, setCurrentProduct] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  sessionStorage.setItem("BWUSERID", 1);
-
   return (
-    //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
+    //use ternery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
     //think of props that need to be passed through each comp ex: <Cart isLoggedIn={isLoggedIn}/>
 
     <>
       <BrowserRouter>
-        <Nav />
+        <Nav isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
 
         <Route path="/landingPage">
           <LandingPage />
@@ -66,7 +73,7 @@ const App = () => {
           <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
         <Route path="/signup">
-          <Signup />
+          <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
         <Route path="/viewProduct">
           <ViewProduct
@@ -82,7 +89,10 @@ const App = () => {
         </Route>
         <Route path="/cart">
           <Cart />
-          {/* insert Cart.js here */}</Route>
+        </Route>
+        <Route path="/logout">
+          <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>
     </>

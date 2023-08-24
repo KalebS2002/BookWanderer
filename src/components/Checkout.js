@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 //figure out how and what to fetch
 const Checkout = () => {
   // TO DO: update user id by what is stored in sessionStorage;
-  const userId = "2";
+  const userId = sessionStorage.getItem("BWUSERID");
   const [order, setOrder] = useState([]);
 
   useEffect(() => {
