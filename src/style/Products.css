@@ -50,9 +50,10 @@
 .cardButtons:hover{
     color: white;
 }
-/* #imgSection{
-  display: flex;
-} */
+
 #productImg{
    width: 65px;
+}
+.hide{
+    display: none;
 }

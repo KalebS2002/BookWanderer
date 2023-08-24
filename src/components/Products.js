@@ -3,6 +3,7 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Products = ({ currentProduct, setCurrentProduct }) => {
   const [products, SetProducts] = useState([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -20,44 +21,53 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
     fetchProducts();
   }, []);
 
-  console.log(products);
   return (
     <>
+      <label htmlFor="searchInput">Search</label>
+      <input
+        placeholder="search..."
+        type="search"
+        id="searchInput"
+        onChange={(e) => setQuery(e.target.value)}
+      ></input>
+
       <div id="productsBody">
-        {products.map((product) => (
-          <div className="row" key={product.id}>
-            <div id="productsContainer" key={product.id}>
-              <div className="productCard">{product.title}</div>
-              <div className="productCard">{product.format}</div>
-              <div id="imgSection">
-                <img
-                  id="productImg"
-                  src={product.imageurl}
-                  alt={product.title}
-                />
-              </div>
-              <div className="productCard">${product.price}</div>
-              <div className="cardButtonSection">
-                <button
-                  className="cardButtons"
-                  id="detailsButton"
-                  onClick={() => {
-                    setCurrentProduct(product);
-                  }}
-                >
-                  <Link className="cardButtons" to="/viewProduct">
-                    See Details
-                  </Link>
-                </button>
-                <button className="cardButtons" id="cartButton">
-                  <Link className="cardButtons" to="/">
-                    Add to Cart
-                  </Link>
-                </button>
+        {products
+          .filter((product) => product.title.includes(query))
+          .map((product) => (
+            <div className="row" key={product.id}>
+              <div id="productsContainer" key={product.id}>
+                <div className="productCard">{product.title}</div>
+                <div className="productCard">{product.format}</div>
+                <div id="imgSection">
+                  <img
+                    id="productImg"
+                    src={product.imageurl}
+                    alt={product.title}
+                  />
+                </div>
+                <div className="productCard">${product.price}</div>
+                <div className="cardButtonSection">
+                  <button
+                    className="cardButtons"
+                    id="detailsButton"
+                    onClick={() => {
+                      setCurrentProduct(product);
+                    }}
+                  >
+                    <Link className="cardButtons" to="/viewProduct">
+                      See Details
+                    </Link>
+                  </button>
+                  <button className="cardButtons" id="cartButton">
+                    <Link className="cardButtons" to="/">
+                      Add to Cart
+                    </Link>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   );
