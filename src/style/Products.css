@@ -54,6 +54,22 @@
 #productImg{
    width: 65px;
 }
-.hide{
+
+#searchLabel{
     display: none;
+    color: rgb(222, 222, 222);
+}
+
+#searchInput{
+    display: flex;
+    padding: 6px;
+    margin: 6px;
+    border-bottom: 2px solid black;
+    border-radius: 12px;
+    transition: 0.6s;
+    width: 25%;
+}
+
+#searchInput:hover{
+    background-color: rgb(232, 232, 232);
 }

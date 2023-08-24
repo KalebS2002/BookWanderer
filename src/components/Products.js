@@ -23,7 +23,9 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
 
   return (
     <>
-      <label htmlFor="searchInput">Search</label>
+      <label htmlFor="searchInput" id="searchLabel">
+        Search
+      </label>
       <input
         placeholder="search..."
         type="search"
@@ -33,7 +35,7 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
 
       <div id="productsBody">
         {products
-          .filter((product) => product.title.includes(query))
+          .filter((product) => product.title.startsWith(query))
           .map((product) => (
             <div className="row" key={product.id}>
               <div id="productsContainer" key={product.id}>
