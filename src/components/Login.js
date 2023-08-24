@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { BrowserRouter, Route, Link } from "react-router-dom";
-import BackgroundRoses from "../Images/BackgroundRoses.png";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import TreeIcon from "../Images/TreeIcon.png";
-import react from "react";
-import Signup from "./Signup";
 import { login } from "../axios-services/users";
 
 function Login({ isLoggedin, setIsLoggedIn }) {
-  const [Page, setPage] = useState("Login");
   const [Password, setPassword] = useState("");
   const [Username, setUsername] = useState("");
   const [message, setMessage] = useState("");
@@ -15,12 +11,11 @@ function Login({ isLoggedin, setIsLoggedIn }) {
   async function HandleForm(event) {
     event.preventDefault();
     let response = await login(Username, Password);
-    console.log(response);
     setMessage(response.message);
   }
 
   return (
-    <form id="Login" method="GET" onSubmit={HandleForm}>
+    <form id="Login" onSubmit={HandleForm}>
       <label className="LoginLabel">Login</label>
       <input
         autoComplete="username"
@@ -49,7 +44,7 @@ function Login({ isLoggedin, setIsLoggedIn }) {
         Sign in
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
-      <Link to="/signup"> Need An Account? Click Here!</Link>
+      <Link to="/signup"> Need An Account? Click Here to Register!</Link>
     </form>
   );
 }
