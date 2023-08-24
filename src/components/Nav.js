@@ -1,20 +1,12 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Link,
-} from "react-router-dom/cjs/react-router-dom.min";
-import { useState, useEffect } from "react";
-import Checkout from "./Checkout";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useEffect } from "react";
 
 const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
-  const Logout = () => {
-    useEffect(() => {
-      sessionStorage.clear();
-    }, []);
-    // return <Redirect to="/landingPage" />;
-  };
+  useEffect(() => {
+    console.log("Nav > useEffect running");
+  }, [isLoggedIn]);
+
   return (
     <>
       <div id="nav">
@@ -35,31 +27,32 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             <Link className="link" to="/products">
               Products
             </Link>
-
-            {/* {isLoggedIn ? <p>this is logged in</p> : <p>this is logged out</p>} */}
-            <Link className="link" to="/login">
-              Login
-            </Link>
-
-            <Link className="link" to="/signup">
-              Sign Up
-            </Link>
-
+            {!isLoggedIn && (
+              <Link className="link" to="/login">
+                Login
+              </Link>
+            )}
+            {!isLoggedIn && (
+              <Link className="link" to="/signup">
+                SignUp
+              </Link>
+            )}
             <Link className="link" to="/checkout">
               Checkout
             </Link>
             <Link className="link" to="/cart">
               Cart
             </Link>
-            <button onClick={Logout()}>Logout</button>
-
-            {/* <button
-              onClick={() => {
-                console.log(isLoggedIn);
-              }}
-            >
-              Login
-            </button> */}
+            {isLoggedIn && (
+              <Link className="link" to="/orderhistory">
+                OrderHistory
+              </Link>
+            )}
+            {isLoggedIn && (
+              <Link className="link" to="/logout">
+                LOGOUT
+              </Link>
+            )}
           </div>
         </nav>
       </div>

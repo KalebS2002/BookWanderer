@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import TreeIcon from "../Images/TreeIcon.png";
 import { login } from "../axios-services/users";
 
-function Login({ isLoggedin, setIsLoggedIn }) {
+function Login({ isLoggedIn, setIsLoggedIn }) {
   const [Password, setPassword] = useState("");
   const [Username, setUsername] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    console.log("Login > useEffect running");
+  }, [isLoggedIn]);
+
   async function HandleForm(event) {
     event.preventDefault();
     let response = await login(Username, Password);
+    let curUserid = sessionStorage.getItem("BWUSERID");
+    console.log("Login > BWUSERID:", curUserid);
+    if (parseInt(curUserid) > 1) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
     setMessage(response.message);
   }
 
@@ -44,7 +55,9 @@ function Login({ isLoggedin, setIsLoggedIn }) {
         Sign in
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
-      <Link to="/signup"> Need An Account? Click Here to Register!</Link>
+      {!isLoggedIn && (
+        <Link to="/signup"> Need An Account? Click Here to Register!</Link>
+      )}
     </form>
   );
 }

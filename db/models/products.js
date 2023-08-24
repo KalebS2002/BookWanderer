@@ -13,7 +13,7 @@ module.exports = {
   getProductsByTitle,
   updateProduct,
   destroyProduct,
-  deleteProduct
+  deleteProduct,
 };
 
 async function createProduct({
@@ -68,34 +68,48 @@ async function getAllProducts() {
 // This function select and return the product matches to the id
 async function getProductsById(id) {
   try {
-    const { rows: [product]} = await client.query(`
+    const {
+      rows: [product],
+    } = await client.query(
+      `
     SELECT * FROM products
     WHERE id = $1
-    `, [id]);
+    `,
+      [id]
+    );
     return product || null;
-  } catch(error){
+  } catch (error) {
     throw error;
   }
 }
 async function getProductsByAuthor(author) {
   try {
-    const {rows: [product]} = await client.query(`
+    const {
+      rows: [product],
+    } = await client.query(
+      `
       SELECT * FROM products
       WHERE author = $1
-    `, [author]);
+    `,
+      [author]
+    );
     return product;
   } catch (error) {
     throw error;
   }
 }
 
-
 async function getProductsByTitle(title) {
   try {
-    const {rows: [product]} = await client.query(`
+    const {
+      rows: [product],
+    } = await client.query(
+      `
       SELECT * FROM products
       WHERE title = $1
-    `, [title]);
+    `,
+      [title]
+    );
     return product;
   } catch (error) {
     throw error;
@@ -119,9 +133,9 @@ async function updateProduct(id, updates) {
     const updateFields = [];
     // An array to store the values
     const values = [id];
-    // Used forEach method to iterate over the fieldsToBeUpdated 
+    // Used forEach method to iterate over the fieldsToBeUpdated
     // Construct the updateFields and values
-     fieldsToBeUpdated.forEach(field => {
+    fieldsToBeUpdated.forEach((field) => {
       // Check if the field exists in the updated object
       if (updates[field] !== undefined) {
         // Add the field to the updateField and push placeholder
@@ -134,13 +148,18 @@ async function updateProduct(id, updates) {
       throw new Error("No update being made.");
     }
 
-    const { rows: [product] } = await client.query(`
+    const {
+      rows: [product],
+    } = await client.query(
+      `
     UPDATE products
     SET ${updateFields.join(", ")}
     WHERE id = $1
     RETURNING *;
-  `, values);
-  //  console.log(product)
+  `,
+      values
+    );
+    //  console.log(product)
     return product;
   } catch (error) {
     throw error;
@@ -154,18 +173,22 @@ const updates = {
   title: "Harry Potter and lame bois ",
   author: "Baajii",
   price: "60.10",
-  isactive: true
-}
+  isactive: true,
+};
 // updateProduct(idtoUpdate, updates)
-
 
 async function destroyProduct(id) {
   try {
-    const { rows: [deleteProduct] } = await client.query(`
+    const {
+      rows: [deleteProduct],
+    } = await client.query(
+      `
     DELETE FROM products
     WHERE id = $1
     RETURNING *;
-  `, [id]);
+  `,
+      [id]
+    );
 
     if (!deleteProduct) {
       throw new Error(`Product with ID ${id} not found.`);
@@ -183,19 +206,19 @@ async function getAllActiveProducts() {
     const { rows: products } = await client.query(
       `SELECT * FROM products WHERE isactive=TRUE;`
     );
-console.log(products)
+
     return products;
   } catch (error) {
     throw error;
   }
 }
 
-// The deleteProduct function will replace destroyProduct. 
+// The deleteProduct function will replace destroyProduct.
 // The team decided it would be better to make a product inactive rather than delete it from the database
 async function deleteProduct(id) {
   try {
     const updates = {
-      isactive: false
+      isactive: false,
     };
 
     const updatedProduct = await updateProduct(id, updates);
