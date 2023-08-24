@@ -1,4 +1,3 @@
-
 /* * {
   margin: 0px;
   padding: 0px;
@@ -14,13 +13,16 @@
 
 
 
-#LoginIcon, #SignupIcon{
+#LoginIcon,
+#SignupIcon {
     height: 20vh;
     background-color: white;
     width: fit-content;
-    
+
 }
-#Login, #Signup{
+
+#Login,
+#Signup {
     /* background: rgb(14, 14, 14); */
     display: flex;
     flex-direction: column;
@@ -29,15 +31,17 @@
     margin: 0% auto;
     margin-top: 10vh;
     align-items: center;
-  }
+}
 
-#LoginTitle, #SignupTitle{
+#LoginTitle,
+#SignupTitle {
     font-size: 25px;
     color: black;
     background: inherit;
     text-align: center;
 }
-.LoginLabel{
+
+.LoginLabel {
     font-size: 30px;
     color: black;
     background: inherit;
@@ -47,14 +51,16 @@
 }
 
 
-#Login, #Signup{
+#Login,
+#Signup {
     display: flex;
     flex-direction: column;
     width: 50;
 }
 
 
-.LoginInput, .SignupInput{
+.LoginInput,
+.SignupInput {
     width: 35vh;
     height: 5vh;
     border: none;
@@ -66,12 +72,14 @@
 
 
 
-#LoginButton::after, #SignupButton::after{
+#LoginButton::after,
+#SignupButton::after {
     font-size: 100px;
 }
 
 
-#LoginError, #SignupError{
+#LoginError,
+#SignupError {
     margin-top: 9px;
     background-color: inherit;
     font-size: 20px;
@@ -80,7 +88,8 @@
 
 }
 
-#LoginButton, #SignupButton{
+#LoginButton,
+#SignupButton {
     width: 35vh;
     height: 5vh;
     border: none;
@@ -92,7 +101,8 @@
 }
 
 
-#LoginButton:hover, #SignupButton:hover{
+#LoginButton:hover,
+#SignupButton:hover {
     background-color: white;
     color: black;
     font-weight: 500;
@@ -100,13 +110,14 @@
     border: 2px solid black;
 }
 
-.TransferButton:hover{
+.TransferButton:hover {
     color: rgb(171, 61, 171);
     border: solid;
     border-top: none;
     border-right: none;
     border-left: none;
 }
+
 .TransferButton {
     border: none;
     background: inherit;
@@ -115,6 +126,7 @@
     height: 5vh;
 }
 
-.LoginInput::-webkit-input-placeholder, .SignupInput::-webkit-input-placeholder{
+.LoginInput::-webkit-input-placeholder,
+.SignupInput::-webkit-input-placeholder {
     color: #ffffff
- }
+}
