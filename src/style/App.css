@@ -1,3 +1,11 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: 0px;
+  box-sizing: border-box;
+}
+
+
 .app-container h1 {
   color: var(--green);
   padding: 1rem;
