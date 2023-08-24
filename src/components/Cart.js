@@ -154,6 +154,7 @@ function Cart() {
   }
 
   async function getUserOrders(user_Id) {
+
     try {
       const response = await fetch(`http://localhost:4000/api/orders/status/current/${user_Id}`)
       const result = await response.json()
@@ -198,17 +199,16 @@ function Cart() {
 
   }
   console.log(CustomerCart)
-
   return (
     <div id="FullCart">
       {CustomerCart.map((product) => {
-
+        console.log(product)
         return (
           <ul key={product.productid}>
             <div id={product.orderid} className="order">
               <p id="Title" className="content">Title: {product.title}  </p>
               <p id="Author" className="content">Author: {product.author}</p>
-
+              <img src={product.imageurl} className="content"></img>
               <section id="QuanitySection">
                 <p id="Quantity" className="content">Quantity: {product.quantity}</p>
                 <button id="AddQuantity" className="content" onClick={(e) => (EditQuantity(e, product))}>+</button>

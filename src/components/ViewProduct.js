@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 //pass currentProduct through this function as prop
 
+
+
+import { addToCart } from "./Cart";
+
 const ViewProduct = ({ currentProduct }) => {
   console.log("single view has", currentProduct);
   const stockImg = currentProduct.imageurl;
@@ -19,7 +23,8 @@ const ViewProduct = ({ currentProduct }) => {
       <div>Qty Available: {currentProduct.qtyavailable}</div>
       <div>Overview: {currentProduct.overview}</div>
       {/* use ternery op ex: if isLoggedIn = true return Cart.js else return Login.js */}
-      <button>Add to Cart</button>
+
+      <button id='AddToCart' onClick={(e) => (addToCart(currentProduct))}>Add to Cart</button>
     </>
   );
 };
