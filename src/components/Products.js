@@ -49,7 +49,11 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
                     See Details
                   </Link>
                 </button>
-
+                <button className="cardButtons" id="cartButton">
+                  <Link className="cardButtons" to="/">
+                    Add to Cart
+                  </Link>
+                </button>
               </div>
             </div>
           </div>
