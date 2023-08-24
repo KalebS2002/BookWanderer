@@ -5,9 +5,16 @@ import {
   Routes,
   Link,
 } from "react-router-dom/cjs/react-router-dom.min";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Checkout from "./Checkout";
-const Nav = () => {
+
+const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
+  const Logout = () => {
+    useEffect(() => {
+      sessionStorage.clear();
+    }, []);
+    // return <Redirect to="/landingPage" />;
+  };
   return (
     <>
       <div id="nav">
@@ -28,18 +35,23 @@ const Nav = () => {
             <Link className="link" to="/products">
               Products
             </Link>
-            {/* <Link className="link" to="/checkout">
-              About
-            </Link> */}
-            <Link className="link" to="/login-signup">
-              Login/ Sign Up
+
+            {/* {isLoggedIn ? <p>this is logged in</p> : <p>this is logged out</p>} */}
+            <Link className="link" to="/login">
+              Login
             </Link>
+
+            <Link className="link" to="/signup">
+              Sign Up
+            </Link>
+
             <Link className="link" to="/checkout">
               Checkout
             </Link>
             <Link className="link" to="/cart">
               Cart
             </Link>
+            <button onClick={Logout()}>Logout</button>
 
             {/* <button
               onClick={() => {

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 //figure out how and what to fetch
 const Checkout = () => {
   // TO DO: update user id by what is stored in sessionStorage;
-  const userId = "5";
+  const userId = "2";
   const [order, setOrder] = useState([]);
 
   useEffect(() => {
@@ -18,10 +18,11 @@ const Checkout = () => {
           `http://localhost:4000/api/orders/status/current/${userId}`
         );
         const result = await response.json();
+        console.log(result);
         const userOrders = result.userOrders[0].orderdetails;
         setOrder(userOrders);
         console.log(userOrders);
-        // console.log(userOrders[0].orderid);
+        console.log(userOrders[0].orderid);
       } catch (error) {
         console.error("failed to fetch order");
       }
@@ -81,7 +82,7 @@ const Checkout = () => {
                 <input
                   className="litle"
                   type="text"
-                  placeholder="Experation Date"
+                  placeholder="Expiration Date"
                 />
                 <input className="tall" type="text" placeholder="CCV" />
               </div>

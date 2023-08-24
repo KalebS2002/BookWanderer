@@ -20,9 +20,11 @@ import LandingPage from "./LandingPage";
 import Footer from "./Footer";
 import Nav from "./Nav";
 import Login from "./Login";
+import Signup from "./Signup";
 import Products from "./Products";
 import ViewProduct from "./ViewProduct";
 import Checkout from "./Checkout";
+import OrderHistory from "./OrderHistory";
 
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
@@ -38,6 +40,7 @@ const App = () => {
   });
 
   const [currentProduct, setCurrentProduct] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
@@ -56,8 +59,11 @@ const App = () => {
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
-        <Route path="/login-signup">
-          <Login />
+        <Route path="/login">
+          <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+        <Route path="/signup">
+          <Signup />
         </Route>
         <Route path="/viewProduct">
           <ViewProduct
@@ -68,7 +74,10 @@ const App = () => {
         <Route path="/checkout">
           <Checkout />
         </Route>
-        <Route path="/cart"></Route>
+        <Route path="/orderHistory">
+          <OrderHistory />
+        </Route>
+        <Route path="/cart">{/* insert Cart.js here */}</Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>
     </>
