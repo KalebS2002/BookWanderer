@@ -43,6 +43,8 @@ const App = () => {
   const [currentProduct, setCurrentProduct] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  sessionStorage.setItem("BWUSERID", 1);
+
   return (
     //use turnery operators for conditioanl rendering ex: {isLoggedIn ? Products : Login }
     //think of props that need to be passed through each comp ex: <Cart isLoggedIn={isLoggedIn}/>
