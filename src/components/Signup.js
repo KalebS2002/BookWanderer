@@ -1,30 +1,21 @@
-import { BrowserRouter, Route, Link } from "react-router-dom";
-import Login from "./Login";
-import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import TreeIcon from "../Images/TreeIcon.png";
 import { signup } from "../axios-services/users";
 
-async function CheckDataBase(Username, Password) {
-  console.log("Ready To Check Database Accounts");
-}
-
 const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
-  const [Page, setPage] = useState("Signup");
   const [Password, setPassword] = useState("");
   const [Username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   async function HandleForm(event) {
     event.preventDefault();
-    CheckDataBase(Username, Password);
     let response = await signup(Username, Password, email);
-    if (response.error) {
-      if (response.error === "UserTakenError") setMessage(response.message);
-    }
+    setMessage(response.message);
   }
 
   return (
-    <form id="Signup" method="GET" onSubmit={HandleForm}>
+    <form id="Signup" onSubmit={HandleForm}>
       <label className="LoginLabel">Sign Up</label>
       <input
         autoComplete="username"
@@ -61,8 +52,7 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
         Register New Account
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
-
-      <Link to="/login"> Have An Account? Click Here!</Link>
+      <Link to="/login"> Have An Account? Click Here to Login!</Link>
     </form>
   );
 };
