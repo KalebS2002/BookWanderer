@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-
+import "../style/Products.css";
 const Products = ({ currentProduct, setCurrentProduct }) => {
   const [products, SetProducts] = useState([]);
   const [query, setQuery] = useState("");
@@ -22,7 +22,7 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
   }, []);
 
   async function addItemToCart(product) {
-    console.log(product);
+    console.log("adding this item to cart", product);
     try {
       const response = await fetch(`api/orders`, {
         method: "POST",
@@ -39,6 +39,10 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
       });
       const result = await response.json();
       console.log(result);
+      if (result?.orderDetail) {
+        alert("Added item to cart!");
+      }
+      return result;
     } catch (error) {
       console.error(`An error occured when adding item to cart.`);
     }
@@ -87,9 +91,12 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
                   <button
                     className="cardButtons"
                     id="cartButton"
-                    onClick={addItemToCart}
+                    onClick={() => {
+                      // console.log(product);
+                      addItemToCart(product);
+                    }}
                   >
-                    <Link className="cardButtons" to="/">
+                    <Link className="cardButtons" to="/products">
                       Add to Cart
                     </Link>
                   </button>

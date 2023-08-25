@@ -1,11 +1,39 @@
 import React from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import "../style/ViewProduct.css";
 //pass currentProduct through this function as prop
 
 const ViewProduct = ({ currentProduct }) => {
   console.log("single view has", currentProduct);
   const stockImg = currentProduct.imageurl;
-  console.log(stockImg);
+
+  async function addItemToCart(product) {
+    console.log("adding this item to cart", currentProduct);
+    try {
+      const response = await fetch(`api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: 1,
+          userid: sessionStorage.getItem("BWUSERID"),
+          productid: currentProduct.id,
+          quantity: 1,
+          itemprice: currentProduct.price,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result?.orderDetail) {
+        alert("Added item to cart!");
+      }
+      return result;
+    } catch (error) {
+      console.error(`An error occured when adding item to cart.`);
+    }
+  }
+
   return (
     <>
       <button>
@@ -19,7 +47,14 @@ const ViewProduct = ({ currentProduct }) => {
       <div>Qty Available: {currentProduct.qtyavailable}</div>
       <div>Overview: {currentProduct.overview}</div>
       {/* use ternery op ex: if isLoggedIn = true return Cart.js else return Login.js */}
-      <button>Add to Cart</button>
+      <button
+        onClick={() => {
+          // console.log(product);
+          addItemToCart(currentProduct);
+        }}
+      >
+        Add to Cart
+      </button>
     </>
   );
 };
