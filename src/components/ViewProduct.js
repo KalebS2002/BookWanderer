@@ -39,22 +39,43 @@ const ViewProduct = ({ currentProduct }) => {
       <button>
         <Link to="/products">Return</Link>
       </button>
-      <div>Title:{currentProduct.title}</div>
-      <div>Author:{currentProduct.author}</div>
-      <img src={stockImg} alt={currentProduct.title} />
-      <div>Price: ${currentProduct.price}</div>
-      <div>Format: {currentProduct.format}</div>
-      <div>Qty Available: {currentProduct.qtyavailable}</div>
-      <div>Overview: {currentProduct.overview}</div>
-      {/* use ternery op ex: if isLoggedIn = true return Cart.js else return Login.js */}
-      <button
-        onClick={() => {
-          // console.log(product);
-          addItemToCart(currentProduct);
-        }}
-      >
-        Add to Cart
-      </button>
+      <div id="viewProductPage">
+        <div id="vPPhoto">
+          <img src={stockImg} alt={currentProduct.title} id="vpI" />
+        </div>
+        <aside>
+          <div id="viewItemSection">
+            <div className="viewProductLine">Title:{currentProduct.title}</div>
+            <div className="viewProductLine">
+              Author:{currentProduct.author}
+            </div>
+            {/* <img src={stockImg} alt={currentProduct.title} id="vpI" /> */}
+            <div className="viewProductLine">
+              Price: ${currentProduct.price}
+            </div>
+            <div className="viewProductLine">
+              Format: {currentProduct.format}
+            </div>
+            <div className="viewProductLine">
+              Qty Available: {currentProduct.qtyavailable}
+            </div>
+            <div className="viewProductLine">
+              Overview: {currentProduct.overview}
+            </div>
+
+            {/* use ternery op ex: if isLoggedIn = true return Cart.js else return Login.js */}
+            <button
+              onClick={() => {
+                // console.log(product);
+                addItemToCart(currentProduct);
+              }}
+            >
+              Add to Cart
+            </button>
+          </div>
+        </aside>
+        {/* ------------- */}
+      </div>
     </>
   );
 };
