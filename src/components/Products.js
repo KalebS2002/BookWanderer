@@ -21,6 +21,29 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
     fetchProducts();
   }, []);
 
+  async function addItemToCart(product) {
+    console.log(product);
+    try {
+      const response = await fetch(`api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: 1,
+          userid: sessionStorage.getItem("BWUSERID"),
+          productid: product.id,
+          quantity: 1,
+          itemprice: product.price,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error(`An error occured when adding item to cart.`);
+    }
+  }
+
   return (
     <>
       <label htmlFor="searchInput" id="searchLabel">
@@ -61,7 +84,11 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
                       See Details
                     </Link>
                   </button>
-                  <button className="cardButtons" id="cartButton">
+                  <button
+                    className="cardButtons"
+                    id="cartButton"
+                    onClick={addItemToCart}
+                  >
                     <Link className="cardButtons" to="/">
                       Add to Cart
                     </Link>
