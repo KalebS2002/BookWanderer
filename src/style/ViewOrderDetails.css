@@ -5,3 +5,7 @@
 #textCenter {
   text-align: center;;
 }
+
+#productsBody{
+  justify-content: space-evenly;
+}

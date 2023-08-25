@@ -1,30 +1,21 @@
-import React, { useState, useEffect, Component } from "react";
-import {
-  BrowserRouter,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom/cjs/react-router-dom.min";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
 // getAPIHealth is defined in our axios-services directory index.js
 import { getAPIHealth } from "../axios-services";
 import "../style/App.css";
-import "../style/Login_Signup.css";
-import "../style/Products.css";
-import "../style/Nav.css";
-import "../style/ViewProduct.css";
-import "../style/Checkout.css";
-import "../style/Footer.css";
+
 import LandingPage from "./LandingPage";
-import Footer from "./Footer";
 import Nav from "./Nav";
 import Login from "./Login";
 import Signup from "./Signup";
 import Products from "./Products";
 import ViewProduct from "./ViewProduct";
-import Checkout from "./Checkout";
 import Cart from "./Cart";
+import Checkout from "./Checkout";
 import OrderHistory from "./OrderHistory";
 import ViewOrderDetails from "./ViewOrderDetails";
+import Profile from "./Profile";
+import Footer from "./Footer";
 
 sessionStorage.setItem("BWUSERID", 1);
 console.log("BWUSERID init:", sessionStorage.getItem("BWUSERID"));
@@ -83,7 +74,9 @@ const App = () => {
         <Route path="/signup">
           <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
-
+        <Route path="/profile">
+          <Profile />
+        </Route>
         <Route path="/checkout">
           <Checkout />
         </Route>

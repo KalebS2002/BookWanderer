@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import "../style/Nav.css";
 
 const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
   useEffect(() => {}, [isLoggedIn]);
@@ -41,6 +41,11 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             <Link className="link" to="/cart">
               Cart
             </Link>
+            {isLoggedIn && (
+              <Link className="link" to="/profile">
+                Profile
+              </Link>
+            )}
             {isLoggedIn && (
               <Link className="link" to="/orderhistory">
                 OrderHistory
