@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-
+import "../style/Products.css";
 const Products = ({ currentProduct, setCurrentProduct }) => {
   const [products, SetProducts] = useState([]);
   const [query, setQuery] = useState("");
@@ -20,6 +20,33 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
     }
     fetchProducts();
   }, []);
+
+  async function addItemToCart(product) {
+    console.log("adding this item to cart", product);
+    try {
+      const response = await fetch(`api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: 1,
+          userid: sessionStorage.getItem("BWUSERID"),
+          productid: product.id,
+          quantity: 1,
+          itemprice: product.price,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result?.orderDetail) {
+        alert("Added item to cart!");
+      }
+      return result;
+    } catch (error) {
+      console.error(`An error occured when adding item to cart.`);
+    }
+  }
 
   return (
     <>
@@ -61,8 +88,15 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
                       See Details
                     </Link>
                   </button>
-                  <button className="cardButtons" id="cartButton">
-                    <Link className="cardButtons" to="/">
+                  <button
+                    className="cardButtons"
+                    id="cartButton"
+                    onClick={() => {
+                      // console.log(product);
+                      addItemToCart(product);
+                    }}
+                  >
+                    <Link className="cardButtons" to="/products">
                       Add to Cart
                     </Link>
                   </button>
