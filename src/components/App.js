@@ -24,6 +24,7 @@ import ViewProduct from "./ViewProduct";
 import Checkout from "./Checkout";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
+import ViewOrderDetails from "./ViewOrderDetails";
 
 sessionStorage.setItem("BWUSERID", 1);
 console.log("BWUSERID init:", sessionStorage.getItem("BWUSERID"));
@@ -40,6 +41,7 @@ const Logout = ({ isLoggedIn, setIsLoggedIn }) => {
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
   const [currentProduct, setCurrentProduct] = useState({});
+  const [purchasedOrder, setPurchasedOrder] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -69,23 +71,33 @@ const App = () => {
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
-        <Route path="/login">
-          <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        </Route>
-        <Route path="/signup">
-          <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        </Route>
         <Route path="/viewProduct">
           <ViewProduct
             currentProduct={currentProduct}
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
+        <Route path="/login">
+          <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+        <Route path="/signup">
+          <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+
         <Route path="/checkout">
           <Checkout />
         </Route>
         <Route path="/orderHistory">
-          <OrderHistory />
+          <OrderHistory
+            purchasedOrder={purchasedOrder}
+            setPurchasedOrder={setPurchasedOrder}
+          />
+        </Route>
+        <Route path="/viewOrderDetails">
+          <ViewOrderDetails
+            purchasedOrder={purchasedOrder}
+            setPurchasedOrder={setPurchasedOrder}
+          />
         </Route>
         <Route path="/cart">
           <Cart />

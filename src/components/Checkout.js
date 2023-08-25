@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 
 //figure out how and what to fetch
 const Checkout = () => {
-  // TO DO: update user id by what is stored in sessionStorage;
   const userId = sessionStorage.getItem("BWUSERID");
   const [order, setOrder] = useState([]);
+  const [checkOutComplete, setCheckoutComplete] = useState(false);
 
   useEffect(() => {
     async function fetchOrder() {
-      console.log("attempting to fectch order....");
+      console.log("attempting to fetch order....");
       try {
         console.log(userId);
         console.log(sessionStorage.getItem("BWUSERID"));
@@ -20,11 +20,15 @@ const Checkout = () => {
           `http://localhost:4000/api/orders/status/current/${userId}`
         );
         const result = await response.json();
-        console.log(result);
-        const userOrders = result.userOrders[0].orderdetails;
-        setOrder(userOrders);
-        console.log(userOrders);
-        console.log(userOrders[0].orderid);
+        console.log("fetchOrder:", result);
+
+        if (result?.userOrders?.length > 0) {
+          // if got a valid response, then setOrder to the first item in the array (there should only be one CURRENT order)
+          setOrder(result.userOrders[0]);
+        } else {
+          // setOrder to an empty array
+          setOrder([]);
+        }
       } catch (error) {
         console.error("failed to fetch order");
       }
@@ -37,45 +41,45 @@ const Checkout = () => {
     console.log("attempting to submit order....");
     try {
       const response = await fetch(
-        `http://localhost:4000/api/orders/${order[0].orderid}`,
+        `http://localhost:4000/api/orders/${order.id}`,
         {
           method: "PATCH",
         }
       );
       const result = await response.json();
-      console.log(result);
+      if (result?.updatedOrder?.status === "PURCHASED") {
+        setCheckoutComplete(true);
+      }
+      console.log("result:", result);
     } catch (error) {
       console.error("failed to submit order");
     }
   }
 
-  // define total start at 0
-  // for each item in the cart multiply itemprice by quantity
-  // take that number and add to total
-
-  let total = 0;
-  for (const item of order) {
-    const itemTotal = +item.itemprice * item.quantity;
-    total += itemTotal;
+  if (Array.isArray(order)) {
+    return (
+      <section>
+        <h2>Sorry - there are no items in your cart.</h2>
+        <h2>Select PRODUCTS to begin adding items.</h2>
+      </section>
+    );
   }
 
-  // console.log(order);
-
   return (
-    //replace values with values recived from order that was passed through. ex: {order.toatal}
-
     <>
       <div id="checkoutPage">
         <section className="component">
           <div className="total">
             <h3>TOTAL</h3>
-            <p>${total}</p>
+            <p>${order.ordertotal}</p>
           </div>
 
           <div className="credit-card">
-            <h2>Checkout</h2>
+            <h2>
+              Checkout - {order.totalitemcount} items - OrderId: {order.id}
+            </h2>
             <form>
-              <input type="text" placeholder="Name" />
+              <input type="text" placeholder={order.username.toUpperCase()} />
               <input type="text" placeholder="Email Address" />
               <div className="line">
                 <input type="text" placeholder="Card Number" />
@@ -88,13 +92,19 @@ const Checkout = () => {
                 />
                 <input className="tall" type="text" placeholder="CCV" />
               </div>
-              <button
-                type="submit"
-                className="valid-button"
-                onClick={submitOrder}
-              >
-                PLACE ORDER
-              </button>
+              {checkOutComplete ? (
+                <div className="line">
+                  <h3>Your order is complete. Please note the OrderId.</h3>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="valid-button"
+                  onClick={submitOrder}
+                >
+                  PLACE ORDER
+                </button>
+              )}
             </form>
           </div>
         </section>

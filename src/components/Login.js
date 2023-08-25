@@ -8,9 +8,7 @@ function Login({ isLoggedIn, setIsLoggedIn }) {
   const [Username, setUsername] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    console.log("Login > useEffect running");
-  }, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   async function HandleForm(event) {
     event.preventDefault();
@@ -56,7 +54,10 @@ function Login({ isLoggedIn, setIsLoggedIn }) {
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
       {!isLoggedIn && (
-        <Link to="/signup"> Need An Account? Click Here to Register!</Link>
+        <div>
+          Need An Account?{"  "}
+          <Link to="/signup">REGISTER!</Link>
+        </div>
       )}
     </form>
   );

@@ -9,9 +9,7 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    console.log("Signup > useEffect running");
-  }, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   async function HandleForm(event) {
     event.preventDefault();
@@ -65,7 +63,10 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
       {!isLoggedIn && (
-        <Link to="/login"> Have An Account? Click Here to Login!</Link>
+        <div>
+          Have An Account?{"  "}
+          <Link to="/login">LOGIN!</Link>
+        </div>
       )}
     </form>
   );
