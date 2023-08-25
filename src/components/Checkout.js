@@ -14,6 +14,8 @@ const Checkout = () => {
     async function fetchOrder() {
       console.log("attempting to fetch order....");
       try {
+        console.log(userId);
+        console.log(sessionStorage.getItem("BWUSERID"));
         const response = await fetch(
           `http://localhost:4000/api/orders/status/current/${userId}`
         );

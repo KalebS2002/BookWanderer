@@ -99,9 +99,7 @@ const App = () => {
             setPurchasedOrder={setPurchasedOrder}
           />
         </Route>
-        <Route path="/cart">
-          <Cart />
-        </Route>
+        <Route path="/cart">{/* <Cart /> */}</Route>
         <Route path="/logout">
           <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
