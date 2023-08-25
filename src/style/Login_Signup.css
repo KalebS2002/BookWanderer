@@ -1,24 +1,8 @@
-/* * {
-  margin: 0px;
-  padding: 0px;
-  box-sizing: 0px;
-  box-sizing: border-box;
-  background-color: rgb(24,24,24);
-  color: white;
-  font-family: 'Segoe UI';
-  resize: none;
-} */
-
-
-
-
-
 #LoginIcon,
 #SignupIcon {
     height: 20vh;
+    width: 20vh;
     background-color: white;
-    width: fit-content;
-
 }
 
 #Login,
@@ -50,14 +34,12 @@
     margin: 6px;
 }
 
-
 #Login,
 #Signup {
     display: flex;
     flex-direction: column;
     width: 50;
 }
-
 
 .LoginInput,
 .SignupInput {
@@ -70,13 +52,10 @@
     border-bottom: 2px solid black;
 }
 
-
-
 #LoginButton::after,
 #SignupButton::after {
     font-size: 100px;
 }
-
 
 #LoginError,
 #SignupError {
@@ -85,7 +64,6 @@
     font-size: 20px;
     font-weight: 900;
     text-align: center;
-
 }
 
 #LoginButton,
@@ -99,7 +77,6 @@
     color: white;
     transition: 0.6s;
 }
-
 
 #LoginButton:hover,
 #SignupButton:hover {

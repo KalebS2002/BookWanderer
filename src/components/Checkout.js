@@ -1,5 +1,6 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import "../style/Checkout.css";
+
 //getOrderByOrderId (w/details) http://localhost:4000/api/orders/id/14
 //order confirmation:  set CURRENT order to PURCHASED => PATCH => PARAMS :id (orderid) => curl http://localhost:4000/api/orders/3 -X PATCH
 //display current order => order total => Confirm purchase button => API call line 33 (order confirmation) => Thanks for shopping with us

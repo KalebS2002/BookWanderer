@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import TreeIcon from "../Images/TreeIcon.png";
 import { signup } from "../axios-services/users";
+import "../style/Login_Signup.css";
 
 const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
   const [Password, setPassword] = useState("");
