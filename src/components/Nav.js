@@ -3,9 +3,7 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useEffect } from "react";
 
 const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
-  useEffect(() => {
-    console.log("Nav > useEffect running");
-  }, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   return (
     <>

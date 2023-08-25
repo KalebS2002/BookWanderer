@@ -100,6 +100,17 @@ async function attachDetailsToOrders(orders) {
 
       let { rows: orderdetails } = await client.query(qryStr);
 
+      let itemCount = 0;
+      let orderTotal = 0.0;
+      for (let j = 0; j < orderdetails.length; j++) {
+        itemCount += orderdetails[j].quantity;
+        orderTotal +=
+          parseFloat(orderdetails[j].itemprice) *
+          parseFloat(orderdetails[j].quantity);
+      }
+      orders[i].totalitemcount = itemCount;
+      orders[i].ordertotal = orderTotal.toFixed(2);
+
       // attach the orderdetails array to the orders object
       orders[i].orderdetails = orderdetails;
     }
@@ -334,13 +345,13 @@ async function updateCurrentGuestOrderForExistingUser(newUserId) {
     if (prevOrderid < 1 && currentOrderid > 0) {
       await updateUseridForOrder(currentOrderid, newUserId);
       const order = await getUserOrdersByStatus("CURRENT", newUserId);
-      console.log("curOrderOnly: ", order);
+      // console.log("curOrderOnly: ", order);
     }
 
     // if only a prevOrder, then the prevOrder for this user IS the current order, so return it
     if (prevOrderid > 0 && currentOrderid < 1) {
       const order = await getUserOrdersByStatus("CURRENT", newUserId);
-      console.log("prevOrderOnly: ", order);
+      // console.log("prevOrderOnly: ", order);
     }
 
     // if user has both curOrder (items in guest cart), and prevOrder (prev CURRENT items for logged in user),
@@ -349,7 +360,7 @@ async function updateCurrentGuestOrderForExistingUser(newUserId) {
       const order = await updateUseridForOrder(prevOrderid, newUserId);
       await changeOrderidForDetails(currentOrderid, prevOrderid);
       await deleteOrder(currentOrderid);
-      console.log("both existed - curOrder updated: ", order);
+      // console.log("both existed - curOrder updated: ", order);
     }
 
     return;
