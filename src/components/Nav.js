@@ -44,7 +44,7 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
               Cart
             </Link>
             {isLoggedIn && (
-              <Link className="link" to="/orderhistory">
+              <Link className="link" to="/profile">
                 OrderHistory
               </Link>
             )}
