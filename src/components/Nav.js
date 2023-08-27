@@ -1,11 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import "../style/Nav.css";
 
 const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
-  useEffect(() => {
-    console.log("Nav > useEffect running");
-  }, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   return (
     <>
@@ -45,6 +43,11 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             </Link>
             {isLoggedIn && (
               <Link className="link" to="/profile">
+                Profile
+              </Link>
+            )}
+            {isLoggedIn && (
+              <Link className="link" to="/orderhistory">
                 OrderHistory
               </Link>
             )}

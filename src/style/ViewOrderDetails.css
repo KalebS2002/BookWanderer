@@ -1,0 +1,23 @@
+#orderDetailBox {
+  border: 1px solid red;
+}
+
+#textCenter {
+  text-align: center;;
+}
+
+#productsBody{
+  justify-content: space-evenly;
+}
+
+#orderHeader {
+  font-size: 1rem;
+  text-align: left;
+  padding-left: 60px;
+  margin-top: 10px;
+}
+
+#productImg {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

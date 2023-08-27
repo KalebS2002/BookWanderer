@@ -36,7 +36,7 @@ async function createUser({ username, useremail, password, isadmin }) {
       [username, useremail, hashedPassword, isadmin]
     );
 
-    console.log("createUser > user :", user);
+    // console.log("createUser > user :", user);
     return user;
   } catch (error) {
     throw error;

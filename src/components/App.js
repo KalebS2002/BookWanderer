@@ -1,31 +1,21 @@
-import React, { useState, useEffect, Component } from "react";
-import {
-  BrowserRouter,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom/cjs/react-router-dom.min";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
 // getAPIHealth is defined in our axios-services directory index.js
 import { getAPIHealth } from "../axios-services";
 import "../style/App.css";
-import "../style/Login_Signup.css";
-import "../style/Products.css";
-import "../style/Nav.css";
-import "../style/ViewProduct.css";
-import "../style/Checkout.css";
-import "../style/Footer.css";
+
 import LandingPage from "./LandingPage";
-import Footer from "./Footer";
 import Nav from "./Nav";
 import Login from "./Login";
 import Signup from "./Signup";
 import Products from "./Products";
 import ViewProduct from "./ViewProduct";
-import Checkout from "./Checkout";
 import Cart from "./Cart";
+import Checkout from "./Checkout";
 import OrderHistory from "./OrderHistory";
+import ViewOrderDetails from "./ViewOrderDetails";
 import Profile from "./Profile";
-import AdminProducts from "./AdminProducts";
+import Footer from "./Footer";
 
 sessionStorage.setItem("BWUSERID", 1);
 console.log("BWUSERID init:", sessionStorage.getItem("BWUSERID"));
@@ -42,6 +32,7 @@ const Logout = ({ isLoggedIn, setIsLoggedIn }) => {
 const App = () => {
   const [APIHealth, setAPIHealth] = useState("");
   const [currentProduct, setCurrentProduct] = useState({});
+  const [purchasedOrder, setPurchasedOrder] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -71,27 +62,37 @@ const App = () => {
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
-        <Route path="/login">
-          <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        </Route>
-        <Route path="/signup">
-          <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        </Route>
         <Route path="/viewProduct">
           <ViewProduct
             currentProduct={currentProduct}
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
+        <Route path="/login">
+          <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+        <Route path="/signup">
+          <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+        <Route path="/profile">
+          <Profile />
+        </Route>
         <Route path="/checkout">
           <Checkout />
         </Route>
         <Route path="/orderHistory">
-          <OrderHistory />
+          <OrderHistory
+            purchasedOrder={purchasedOrder}
+            setPurchasedOrder={setPurchasedOrder}
+          />
         </Route>
-        <Route path="/cart">
-          <Cart />
+        <Route path="/viewOrderDetails">
+          <ViewOrderDetails
+            purchasedOrder={purchasedOrder}
+            setPurchasedOrder={setPurchasedOrder}
+          />
         </Route>
+        <Route path="/cart">{/* <Cart /> */}</Route>
         <Route path="/logout">
           <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>

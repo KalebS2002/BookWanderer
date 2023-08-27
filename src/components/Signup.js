@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import TreeIcon from "../Images/TreeIcon.png";
 import { signup } from "../axios-services/users";
+import "../style/Login_Signup.css";
 
 const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
   const [Password, setPassword] = useState("");
@@ -9,9 +10,7 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    console.log("Signup > useEffect running");
-  }, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   async function HandleForm(event) {
     event.preventDefault();
@@ -65,7 +64,10 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
       {!isLoggedIn && (
-        <Link to="/login"> Have An Account? Click Here to Login!</Link>
+        <div>
+          Have An Account?{"  "}
+          <Link to="/login">LOGIN!</Link>
+        </div>
       )}
     </form>
   );
