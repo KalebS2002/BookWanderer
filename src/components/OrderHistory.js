@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Products.css";
 import "../style/ViewOrderDetails.css";
+import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
 
 const OrderHistory = ({ purchasedOrder, setPurchasedOrder }) => {
   const userId = sessionStorage.getItem("BWUSERID");
@@ -9,17 +10,15 @@ const OrderHistory = ({ purchasedOrder, setPurchasedOrder }) => {
 
   useEffect(() => {
     async function fetchPurchasedOrders() {
-      console.log("getting orders ...");
+      console.log("fetchPurchasedOrders ...");
       try {
-        const response = await fetch(
-          `http://localhost:4000/api/orders/status/purchased/${userId}`
-        );
+        const response = await fetch(`api/orders/status/purchased/${userId}`);
         const result = await response.json();
         const orderData = result.userOrders;
-        // console.log(result);
+        console.log(result);
         setOrders(orderData);
       } catch (error) {
-        console.error("failed to fetch purchased orders");
+        console.error("failed to fetch PURCHASED orders");
       }
     }
     fetchPurchasedOrders();
@@ -28,7 +27,8 @@ const OrderHistory = ({ purchasedOrder, setPurchasedOrder }) => {
   if (!orders || orders.length < 1) {
     return (
       <section id="textCenter">
-        <h2>You have no previous orders to display.</h2>
+        <h2>No previous orders to display.</h2>
+        <img className="background" src={LandingPage_Background}></img>
       </section>
     );
   }

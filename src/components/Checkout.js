@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/Checkout.css";
+import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
 
-//getOrderByOrderId (w/details) http://localhost:4000/api/orders/id/14
-//order confirmation:  set CURRENT order to PURCHASED => PATCH => PARAMS :id (orderid) => curl http://localhost:4000/api/orders/3 -X PATCH
-//display current order => order total => Confirm purchase button => API call line 33 (order confirmation) => Thanks for shopping with us
-
-//figure out how and what to fetch
 const Checkout = () => {
   const userId = sessionStorage.getItem("BWUSERID");
   const [order, setOrder] = useState([]);
@@ -13,15 +9,10 @@ const Checkout = () => {
 
   useEffect(() => {
     async function fetchOrder() {
-      console.log("attempting to fetch order....");
+      console.log("Checkout > fetchOrder CURRENT ...");
       try {
-        console.log(userId);
-        console.log(sessionStorage.getItem("BWUSERID"));
-        const response = await fetch(
-          `http://localhost:4000/api/orders/status/current/${userId}`
-        );
+        const response = await fetch(`api/orders/status/current/${userId}`);
         const result = await response.json();
-        console.log("fetchOrder:", result);
 
         if (result?.userOrders?.length > 0) {
           // if got a valid response, then setOrder to the first item in the array (there should only be one CURRENT order)
@@ -31,7 +22,7 @@ const Checkout = () => {
           setOrder([]);
         }
       } catch (error) {
-        console.error("failed to fetch order");
+        console.error("failed fetchOrder");
       }
     }
     fetchOrder();
@@ -39,19 +30,17 @@ const Checkout = () => {
 
   async function submitOrder(event) {
     event.preventDefault();
-    console.log("attempting to submit order....");
+
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/orders/${order.id}`,
-        {
-          method: "PATCH",
-        }
-      );
+      console.log("Checkout > PATCH - orderid:", order.id);
+      const response = await fetch(`api/orders/${order.id}`, {
+        method: "PATCH",
+      });
       const result = await response.json();
+      console.log("PATCH result:", result);
       if (result?.updatedOrder?.status === "PURCHASED") {
         setCheckoutComplete(true);
       }
-      console.log("result:", result);
     } catch (error) {
       console.error("failed to submit order");
     }
@@ -59,9 +48,10 @@ const Checkout = () => {
 
   if (Array.isArray(order)) {
     return (
-      <section>
-        <h2>Sorry - there are no items in your cart.</h2>
-        <h2>Select PRODUCTS to begin adding items.</h2>
+      <section id="textCenter">
+        <h2>No items to display.</h2>
+        <h2>Select PRODUCTS to begin adding items to your order.</h2>
+        <img className="background" src={LandingPage_Background}></img>
       </section>
     );
   }

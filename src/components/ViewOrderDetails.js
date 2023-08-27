@@ -4,8 +4,6 @@ import "../style/Products.css";
 import "../style/ViewOrderDetails.css";
 
 const ViewOrderDetails = ({ purchasedOrder }) => {
-  console.log("single view has", purchasedOrder);
-
   return (
     <>
       <section id="orderHeader">
@@ -13,9 +11,18 @@ const ViewOrderDetails = ({ purchasedOrder }) => {
           <Link to="/orderhistory">Return to OrderHistory</Link>
         </button>
 
-        <div>Order Detail for Order ID: {purchasedOrder.id}</div>
-        <div>Purchased on: {purchasedOrder.lastupdate.substring(0, 10)}</div>
-        <div>Total for this order was: ${purchasedOrder.ordertotal}</div>
+        <div>
+          Details for ORDER ID:{"  "} {purchasedOrder.id}
+        </div>
+        <div>
+          Purchased on:{"  "} {purchasedOrder.lastupdate.substring(0, 10)}
+        </div>
+        <div>
+          Number of Items:{"  "} {purchasedOrder.totalitemcount}
+        </div>
+        <div>
+          Order Total:{"  "} ${purchasedOrder.ordertotal}
+        </div>
         <div>
           {" "}
           - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{" "}
@@ -26,6 +33,7 @@ const ViewOrderDetails = ({ purchasedOrder }) => {
         {purchasedOrder.orderdetails.map((orderDetail) => (
           <div className="row" key={orderDetail.productid}>
             <div id="productsContainer">
+              <div className="productCard">{orderDetail.title}</div>
               <div id="imgSection">
                 <img
                   id="productImg"
@@ -33,8 +41,10 @@ const ViewOrderDetails = ({ purchasedOrder }) => {
                   alt={orderDetail.title}
                 />
               </div>
-              <div className="productCard">Title: {orderDetail.title}</div>
-              <div className="productCard">Author: {orderDetail.author}</div>
+              <div className="productCard">By: {orderDetail.author}</div>
+              <div className="productCard">
+                {orderDetail.format}, {orderDetail.category}
+              </div>
               <div className="productCard">
                 Item Price: ${orderDetail.itemprice}
               </div>

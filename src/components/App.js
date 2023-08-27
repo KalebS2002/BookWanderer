@@ -62,6 +62,9 @@ const App = () => {
             setCurrentProduct={setCurrentProduct}
           />
         </Route>
+        <Route path="/cart">
+          <Cart />
+        </Route>
         <Route path="/viewProduct">
           <ViewProduct
             currentProduct={currentProduct}
@@ -77,9 +80,6 @@ const App = () => {
         <Route path="/profile">
           <Profile />
         </Route>
-        <Route path="/checkout">
-          <Checkout />
-        </Route>
         <Route path="/orderHistory">
           <OrderHistory
             purchasedOrder={purchasedOrder}
@@ -92,7 +92,9 @@ const App = () => {
             setPurchasedOrder={setPurchasedOrder}
           />
         </Route>
-        <Route path="/cart">{/* <Cart /> */}</Route>
+        <Route path="/checkout">
+          <Checkout />
+        </Route>
         <Route path="/logout">
           <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>

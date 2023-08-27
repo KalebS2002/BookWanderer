@@ -93,7 +93,9 @@ async function attachDetailsToOrders(orders) {
         od.itemprice AS itemprice,
         prod.title AS title,
         prod.author AS author,
-        prod.imageurl AS imageurl
+        prod.imageurl AS imageurl,
+        prod.format AS format,
+        prod.category AS category
         FROM orderdetails AS od
         JOIN products prod ON prod.id=od.productid
         WHERE od.orderid=${orderid} ;`;

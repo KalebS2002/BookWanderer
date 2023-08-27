@@ -25,6 +25,9 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             <Link className="link" to="/products">
               Products
             </Link>
+            <Link className="link" to="/cart">
+              CART
+            </Link>
             {!isLoggedIn && (
               <Link className="link" to="/login">
                 Login
@@ -35,12 +38,6 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
                 SignUp
               </Link>
             )}
-            <Link className="link" to="/checkout">
-              Checkout
-            </Link>
-            <Link className="link" to="/cart">
-              Cart
-            </Link>
             {isLoggedIn && (
               <Link className="link" to="/profile">
                 Profile
@@ -51,6 +48,9 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
                 OrderHistory
               </Link>
             )}
+            <Link className="link" to="/checkout">
+              Checkout
+            </Link>
             {isLoggedIn && (
               <Link className="link" to="/logout">
                 LOGOUT
