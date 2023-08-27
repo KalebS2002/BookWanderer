@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "../style/Products.css";
-const Products = ({ currentProduct, setCurrentProduct }) => {
+
+const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
+  const userId = sessionStorage.getItem("BWUSERID");
   const [products, SetProducts] = useState([]);
   const [query, setQuery] = useState("");
 
@@ -9,7 +11,7 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
     async function fetchProducts() {
       console.log("attempting to fectch products....");
       try {
-        const response = await fetch(`http://localhost:4000/api/products`);
+        const response = await fetch(`api/products`);
         const result = await response.json();
         const productData = result.products;
         // console.log(result);
@@ -30,16 +32,18 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          quantity: 1,
-          userid: sessionStorage.getItem("BWUSERID"),
+          userid: userId,
           productid: product.id,
-          quantity: 1,
           itemprice: product.price,
+          quantity: 1,
         }),
       });
       const result = await response.json();
-      console.log(result);
+      console.log("addItemToCart:", result);
       if (result?.orderDetail) {
+        let newCount = itemCount + 1;
+        console.log("set itemCount to: ", itemCount);
+        setItemCount(newCount);
         alert("Added item to cart!");
       }
       return result;
@@ -57,17 +61,21 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
         placeholder="search..."
         type="search"
         id="searchInput"
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setQuery(e.target.value.toLowerCase())}
       ></input>
 
       <div id="productsBody">
         {products
-          .filter((product) => product.title.startsWith(query))
+          .filter(
+            (product) =>
+              product.title.toLowerCase().includes(query) ||
+              product.author.toLowerCase().includes(query)
+          )
           .map((product) => (
             <div className="row" key={product.id}>
               <div id="productsContainer" key={product.id}>
                 <div className="productCard">{product.title}</div>
-                <div className="productCard">{product.format}</div>
+                <div className="productCard">By: {product.author}</div>
                 <div id="imgSection">
                   <img
                     id="productImg"
@@ -75,6 +83,7 @@ const Products = ({ currentProduct, setCurrentProduct }) => {
                     alt={product.title}
                   />
                 </div>
+                <div className="productCard">{product.format}</div>
                 <div className="productCard">${product.price}</div>
                 <div className="cardButtonSection">
                   <button

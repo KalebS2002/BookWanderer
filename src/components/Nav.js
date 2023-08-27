@@ -2,8 +2,29 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Nav.css";
 
-const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
-  useEffect(() => {}, [isLoggedIn]);
+const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
+  const userId = sessionStorage.getItem("BWUSERID");
+
+  useEffect(() => {
+    async function fetchCurrentOrder() {
+      console.log("NAV > CURRENT itemCount  ...");
+      try {
+        const response = await fetch(`api/orders/status/current/${userId}`);
+        const result = await response.json();
+        if (result?.userOrders?.length > 0) {
+          // if got a valid response, then setItemCount from the first array element (should only be 1 CURRENT order)
+          setItemCount(result.userOrders[0].totalitemcount);
+        } else {
+          // setOrder to an empty array
+          setItemCount(0);
+        }
+        console.log("itemCount:", itemCount);
+      } catch (error) {
+        console.error("failed to fetch CURRENT order");
+      }
+    }
+    fetchCurrentOrder();
+  }, [isLoggedIn, itemCount]);
 
   return (
     <>
@@ -25,6 +46,11 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
             <Link className="link" to="/products">
               Products
             </Link>
+            <Link className="link" to="/newcart">
+              CART {" ("}
+              {itemCount}
+              {")"}
+            </Link>
             {!isLoggedIn && (
               <Link className="link" to="/login">
                 Login
@@ -35,20 +61,14 @@ const Nav = ({ isLoggedIn, setIsLoggedIn }) => {
                 SignUp
               </Link>
             )}
-            <Link className="link" to="/checkout">
-              Checkout
-            </Link>
-            <Link className="link" to="/cart">
-              Cart
-            </Link>
-            {isLoggedIn && (
-              <Link className="link" to="/profile">
-                Profile
-              </Link>
-            )}
             {isLoggedIn && (
               <Link className="link" to="/orderhistory">
                 OrderHistory
+              </Link>
+            )}
+            {isLoggedIn && (
+              <Link className="link" to="/profile">
+                Profile
               </Link>
             )}
             {isLoggedIn && (

@@ -2,14 +2,11 @@ import axios from "axios";
 
 export async function signup(username, password, email) {
   try {
-    const { data } = await axios.post(
-      "http://localhost:4000/api/users/register",
-      {
-        username: username,
-        password: password,
-        useremail: email,
-      }
-    );
+    const { data } = await axios.post("api/users/register", {
+      username: username,
+      password: password,
+      useremail: email,
+    });
     console.log("signupx", data);
     if (data.user)
       sessionStorage.setItem("BWUSERID", parseInt(data.user.userid));
@@ -21,7 +18,7 @@ export async function signup(username, password, email) {
 
 export async function login(username, password) {
   try {
-    const { data } = await axios.post("http://localhost:4000/api/users/login", {
+    const { data } = await axios.post("api/users/login", {
       username: username,
       password: password,
     });

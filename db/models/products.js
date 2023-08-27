@@ -204,7 +204,8 @@ async function getAllActiveProducts() {
   // return an array of products that are ACTIVE
   try {
     const { rows: products } = await client.query(
-      `SELECT * FROM products WHERE isactive=TRUE;`
+      `SELECT * FROM products WHERE isactive=TRUE
+       ORDER BY title ASC;`
     );
 
     return products;
