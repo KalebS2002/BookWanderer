@@ -23,12 +23,7 @@
   height: 74vh;
 }
 
-#productsContainer{
-  height: fit-content;
-  max-height: 325px;
-  min-height: 275px;
-}
-
-.cardButtons {
-   font-weight: bold;
+#addPadding {
+  margin: 5px 20px;
+  padding: 5px 10px;
 }

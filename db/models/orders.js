@@ -3,7 +3,10 @@
 // grab db client connection to use with adapters
 const client = require("../client");
 const { getUserById, getUserByUsername, getGuestUserid } = require("./user");
-const { changeOrderidForDetails } = require("./orderdetails");
+const {
+  changeOrderidForDetails,
+  getOrderDetailsByOrderId,
+} = require("./orderdetails");
 
 // add your database adapter fns here
 module.exports = {
@@ -204,6 +207,7 @@ async function getUserOrdersByStatus(status, userid) {
     SELECT * FROM orders
       WHERE status=$1
       AND userid=${userid}
+      ORDER BY lastupdate DESC
     ;`,
       [status]
     );
@@ -233,6 +237,34 @@ async function setCurrentOrderToPurchased(orderid) {
   `,
       ["PURCHASED", currentDate]
     );
+
+    // if the order was successfully changed to PURCHASED status,
+    // then for each productid that exists in the orderdetails, the associated product.qtyavailable needs to be reduced by the number purchased
+    if (order) {
+      // get the orderdetails records for this order
+      const orderdetails = await getOrderDetailsByOrderId(orderid);
+
+      for (let x = 0; x < orderdetails.length; x++) {
+        // for each orderdetails record, get the product record (just need the id and qtyavailable)
+        const { rows: prodRecord } = await client.query(
+          `SELECT id, qtyavailable FROM products
+           WHERE id = ${orderdetails[x].productid}
+          `
+        );
+
+        // subtract the number purchased from the qtyavailable.  if it is less than zero, then just set newQty to 0
+        let newQty = prodRecord[0].qtyavailable - orderdetails[x].quantity;
+        if (newQty < 0) {
+          newQty = 0;
+        }
+        // update the product.qtyavailable field with the newQty
+        await client.query(
+          `UPDATE products SET qtyavailable = ${newQty}
+           WHERE id = ${orderdetails[x].productid}
+          `
+        );
+      }
+    }
 
     return order;
   } catch (error) {

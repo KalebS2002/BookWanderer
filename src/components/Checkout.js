@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../style/Checkout.css";
 import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
 
-const Checkout = () => {
+const Checkout = (itemCount, setItemCount) => {
   const userId = sessionStorage.getItem("BWUSERID");
   const [order, setOrder] = useState([]);
   const [checkOutComplete, setCheckoutComplete] = useState(false);
@@ -40,6 +40,7 @@ const Checkout = () => {
       console.log("PATCH result:", result);
       if (result?.updatedOrder?.status === "PURCHASED") {
         setCheckoutComplete(true);
+        setItemCount(0);
       }
     } catch (error) {
       console.error("failed to submit order");

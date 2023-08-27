@@ -39,10 +39,10 @@ const OrderHistory = ({ purchasedOrder, setPurchasedOrder }) => {
         {orders.map((order) => (
           <div className="row" key={order.id}>
             <div id="productsContainer" key={order.id}>
-              <div className="productCard">Order Id: {order.id}</div>
               <div className="productCard">
                 Order Date: {order.lastupdate.substring(0, 10)}
               </div>
+              <div className="productCard">Order Id: {order.id}</div>
               <div className="productCard">
                 Total Items Purchased: {order.totalitemcount}
               </div>
