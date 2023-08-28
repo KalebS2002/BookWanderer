@@ -19,7 +19,8 @@ const NewCart = ({ itemCount, setItemCount }) => {
         console.log("NewCart > result:", result);
         if (orderData?.length > 0) {
           setCurrentOrder(orderData[0]);
-          setItemCount(currentOrder.totalitemcount);
+          setItemCount(orderData[0].totalitemcount);
+          console.log("fetchCurrentOrder > itemCount:", itemCount);
         } else {
           setCurrentOrder([]);
         }
@@ -32,7 +33,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
   }, [forceRender]);
 
   async function adjustCart(strAddSub, orderid, productid, curQty) {
-    console.log("NewCart > parm:", strAddSub, orderid, productid, curQty);
+    console.log("adjustCart > parm:", strAddSub, orderid, productid, curQty);
     try {
       // get product record for productid
       const prodFetch = await fetch(`api/products/${productid}`);
@@ -47,14 +48,14 @@ const NewCart = ({ itemCount, setItemCount }) => {
       ) {
         // if removing detail item, and it is the last item, then run DELETE to remove the orderdetail record from the order
         if (strAddSub == "DEL") {
-          console.log("NewCart > DELETE");
+          console.log("adjustCart > DELETE");
           response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
             method: "DELETE",
           });
         } else {
           // else change the orderdetail quantity for this item
           let newQty = strAddSub == "ADD" ? curQty + 1 : curQty - 1;
-          console.log("NewCart > PATCH > newQty:", newQty);
+          console.log("adjustCart > PATCH > newQty:", newQty);
           response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
             method: "PATCH",
             headers: {
@@ -64,7 +65,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
           });
         }
         const result = await response.json();
-        console.log("NewCart > result:", result);
+        console.log("adjustCart > result:", result);
         setForceRender(true);
         return result;
       } else {
@@ -97,6 +98,12 @@ const NewCart = ({ itemCount, setItemCount }) => {
   if (Array.isArray(currentOrder)) {
     return (
       <section id="textCenter">
+        <button id="addPadding" disabled="disabled">
+          <Link to="/checkout">Proceed to Checkout</Link>
+        </button>
+        <button id="addPadding">
+          <Link to="/products">Continue Shopping</Link>
+        </button>
         <h2>There are no items in your shopping cart.</h2>
         <h2>Select PRODUCTS to start adding items to your cart.</h2>
         <img className="background" src={LandingPage_Background}></img>
@@ -107,9 +114,16 @@ const NewCart = ({ itemCount, setItemCount }) => {
   return (
     <>
       <section id="orderHeader">
-        <button id="addPadding">
-          <Link to="/checkout">Procced to Checkout</Link>
-        </button>
+        {itemCount < 1 ? (
+          <button id="addPadding" disabled="disabled">
+            <Link to="/checkout">Proceed to Checkout</Link>
+          </button>
+        ) : (
+          <button id="addPadding">
+            <Link to="/checkout">Proceed to Checkout</Link>
+          </button>
+        )}
+
         <button id="addPadding">
           <Link to="/products">Continue Shopping</Link>
         </button>
