@@ -17,6 +17,7 @@ import OrderHistory from "./OrderHistory";
 import ViewOrderDetails from "./ViewOrderDetails";
 import Profile from "./Profile";
 import Footer from "./Footer";
+import AdminProducts from "./AdminProducts";
 
 sessionStorage.setItem("BWUSERID", 1);
 console.log("BWUSERID init:", sessionStorage.getItem("BWUSERID"));
@@ -80,9 +81,7 @@ const App = () => {
         <Route path="/signup">
           <Signup isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
-        <Route path="/profile">
-          <Profile />
-        </Route>
+
         <Route path="/checkout">
           <Checkout itemCount={itemCount} setItemCount={setItemCount} />
         </Route>
@@ -105,6 +104,12 @@ const App = () => {
 
         <Route path="/logout">
           <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        </Route>
+        <Route path="/profile">
+          <Profile isLoggedIn={isLoggedIn}/>
+        </Route>
+        <Route path="/adminproducts">
+          <AdminProducts isLoggedIn={isLoggedIn}/>
         </Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>

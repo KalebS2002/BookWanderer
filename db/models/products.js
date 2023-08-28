@@ -13,7 +13,8 @@ module.exports = {
   getProductsByTitle,
   updateProduct,
   destroyProduct,
-  deleteProduct,
+  deactivateProduct,
+  activateProduct
 };
 
 async function createProduct({
@@ -27,7 +28,6 @@ async function createProduct({
   qtyavailable,
   imageurl,
 }) {
-  // create a new products record.  Only an Admin user sh be allowed to do this
   try {
     const {
       rows: [product],
@@ -57,7 +57,6 @@ async function createProduct({
 }
 
 async function getAllProducts() {
-  // return an array of ALL products (both active and inactive)
   try {
     const { rows: products } = await client.query(
       `SELECT * FROM products ORDER BY title ASC;`
@@ -131,21 +130,18 @@ async function updateProduct(id, updates) {
       "qtyavailable",
       "imageurl",
     ];
-    // to store the fields that are being updated
+
     const updateFields = [];
-    // An array to store the values
     const values = [id];
-    // Used forEach method to iterate over the fieldsToBeUpdated
-    // Construct the updateFields and values
+
     fieldsToBeUpdated.forEach((field) => {
-      // Check if the field exists in the updated object
+
       if (updates[field] !== undefined) {
-        // Add the field to the updateField and push placeholder
         updateFields.push(`${field} = $${values.length + 1}`);
         values.push(updates[field]);
       }
     });
-    //If no update being pushed, throw an error
+
     if (updateFields.length === 0) {
       throw new Error("No update being made.");
     }
@@ -161,23 +157,11 @@ async function updateProduct(id, updates) {
   `,
       values
     );
-    //  console.log(product)
     return product;
   } catch (error) {
     throw error;
   }
 }
-
-// Random Dummy Data to test my updateProduct code and will delete later
-
-const idtoUpdate = 2;
-const updates = {
-  title: "Harry Potter and lame bois ",
-  author: "Baajii",
-  price: "60.10",
-  isactive: true,
-};
-// updateProduct(idtoUpdate, updates)
 
 async function destroyProduct(id) {
   try {
@@ -203,7 +187,6 @@ async function destroyProduct(id) {
 }
 
 async function getAllActiveProducts() {
-  // return an array of products that are ACTIVE
   try {
     const { rows: products } = await client.query(
       `SELECT * FROM products WHERE isactive=TRUE
@@ -216,12 +199,23 @@ async function getAllActiveProducts() {
   }
 }
 
-// The deleteProduct function will replace destroyProduct.
-// The team decided it would be better to make a product inactive rather than delete it from the database
-async function deleteProduct(id) {
+async function deactivateProduct(id) {
   try {
     const updates = {
       isactive: false,
+    };
+
+    const updatedProduct = await updateProduct(id, updates);
+    return updatedProduct;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function activateProduct(id) {
+  try {
+    const updates = {
+      isactive: true,
     };
 
     const updatedProduct = await updateProduct(id, updates);
