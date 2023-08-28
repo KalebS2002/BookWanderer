@@ -1,9 +1,5 @@
-#orderDetailBox {
-  border: 1px solid red;
-}
-
 #textCenter {
-  text-align: center;;
+  text-align: center;
 }
 
 #productsBody{
@@ -20,4 +16,14 @@
 #productImg {
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.background {
+  width: 100%;
+  height: 74vh;
+}
+
+#addPadding {
+  margin: 5px 20px;
+  padding: 5px 10px;
 }
