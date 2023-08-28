@@ -97,18 +97,28 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
                       See Details
                     </Link>
                   </button>
-                  <button
-                    className="cardButtons"
-                    id="cartButton"
-                    onClick={() => {
-                      // console.log(product);
-                      addItemToCart(product);
-                    }}
-                  >
-                    <Link className="cardButtons" to="/products">
-                      Add to Cart
-                    </Link>
-                  </button>
+                  {product.qtyavailable > 0 ? (
+                    <button
+                      className="cardButtons"
+                      id="cartButton"
+                      onClick={() => {
+                        // console.log(product);
+                        addItemToCart(product);
+                      }}
+                    >
+                      <Link
+                        className="cardButtons"
+                        id="cartButton"
+                        to="/products"
+                      >
+                        Add to Cart
+                      </Link>
+                    </button>
+                  ) : (
+                    <button disabled="disabled" className="cartButton">
+                      Out of Stock
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

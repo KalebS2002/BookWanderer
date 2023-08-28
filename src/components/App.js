@@ -10,7 +10,6 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Products from "./Products";
 import ViewProduct from "./ViewProduct";
-import Cart from "./Cart"; // inactive
 import NewCart from "./NewCart"; // currently active
 import Checkout from "./Checkout";
 import OrderHistory from "./OrderHistory";
@@ -57,7 +56,7 @@ const App = () => {
           setItemCount={setItemCount}
         />
 
-        <Route path="/landingPage">
+        <Route exact path="/">
           <LandingPage />
         </Route>
         <Route path="/products">
@@ -106,10 +105,10 @@ const App = () => {
           <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </Route>
         <Route path="/profile">
-          <Profile isLoggedIn={isLoggedIn}/>
+          <Profile isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/adminproducts">
-          <AdminProducts isLoggedIn={isLoggedIn}/>
+          <AdminProducts isLoggedIn={isLoggedIn} />
         </Route>
       </BrowserRouter>
       <div id="footerSection">{/* <Footer /> */}</div>
