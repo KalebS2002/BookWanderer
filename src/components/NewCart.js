@@ -99,7 +99,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
     return (
       <section id="textCenter">
         <button id="addPadding" disabled="disabled">
-          <Link to="/checkout">Proceed to Checkout</Link>
+          Proceed to Checkout
         </button>
         <button id="addPadding">
           <Link to="/products">Continue Shopping</Link>

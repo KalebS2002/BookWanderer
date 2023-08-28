@@ -40,7 +40,7 @@ const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
             <h1 id="title">Book Wanderer</h1>
           </div>
           <div id="navSelections">
-            <Link className="link" to="/landingPage">
+            <Link className="link" to="/">
               Home
             </Link>
             <Link className="link" to="/products">
@@ -73,7 +73,7 @@ const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
             )}
             {isLoggedIn && (
               <Link className="link" to="/logout">
-                LOGOUT
+                Logout
               </Link>
             )}
           </div>

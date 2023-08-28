@@ -55,10 +55,14 @@ function Login({ isLoggedIn, setIsLoggedIn }) {
         Sign in
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
-      {!isLoggedIn && (
-        <div>
+      {!isLoggedIn ? (
+        <div className="startShopping">
           Need An Account?{"  "}
           <Link to="/signup">REGISTER!</Link>
+        </div>
+      ) : (
+        <div className="startShopping">
+          <Link to="/products">Start Shopping!</Link>
         </div>
       )}
     </form>

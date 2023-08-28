@@ -48,7 +48,8 @@
     border: none;
     margin-top: 3px;
     margin-bottom: so;
-    /* background-color: lightgray; */
+    background-color: rgb(210, 210, 210);
+    border-radius: 12px;
     border-bottom: 2px solid black;
 }
 
@@ -76,6 +77,8 @@
     background-color: black;
     color: white;
     transition: 0.6s;
+    border: 2px solid black;
+    border-radius: 12px;
 }
 
 #LoginButton:hover,
@@ -106,4 +109,8 @@
 .LoginInput::-webkit-input-placeholder,
 .SignupInput::-webkit-input-placeholder {
     color: #ffffff
+}
+
+.startShopping{
+    margin-top: 16px;
 }

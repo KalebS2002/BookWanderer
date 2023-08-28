@@ -39,16 +39,6 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
         className="LoginInput"
       ></input>
       <input
-        autoComplete="current-password"
-        value={Password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-        type="password"
-        placeholder="Password"
-        className="LoginInput"
-      ></input>
-      <input
         autoComplete="email"
         value={email}
         onChange={(e) => {
@@ -58,15 +48,29 @@ const Signup = ({ isLoggedIn, setIsLoggedIn }) => {
         placeholder="Email"
         className="LoginInput"
       ></input>
+      <input
+        autoComplete="current-password"
+        value={Password}
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
+        type="password"
+        placeholder="Password"
+        className="LoginInput"
+      ></input>
       <p id="SignupError">{message}</p>
       <button id="SignupButton" type="submit">
         Register New Account
       </button>
       <img id="LoginIcon" src={TreeIcon} alt="Icon"></img>
-      {!isLoggedIn && (
-        <div>
-          Have An Account?{"  "}
-          <Link to="/login">LOGIN!</Link>
+      {!isLoggedIn ? (
+        <div className="startShopping">
+          Need An Account?{"  "}
+          <Link to="/login">Login</Link>
+        </div>
+      ) : (
+        <div className="startShopping">
+          <Link to="/products">Start Shopping!</Link>
         </div>
       )}
     </form>
