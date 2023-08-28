@@ -58,7 +58,9 @@ async function createProduct({
 
 async function getAllProducts() {
   try {
-    const { rows: products } = await client.query(`SELECT * FROM products;`);
+    const { rows: products } = await client.query(
+      `SELECT * FROM products ORDER BY title ASC;`
+    );
     return products;
   } catch (error) {
     throw error;
