@@ -66,7 +66,8 @@ const Profile = ({isLoggedIn}) => {
     useEffect(() => {
       getUsers();
     }, []);
-
+    
+    
     const getUsers = async () => {
       try {
         const userData = await fetchAllUsers();
@@ -84,6 +85,16 @@ const Profile = ({isLoggedIn}) => {
       }
     };
 
+    //Checking if user is logged in.
+
+    if (!isLoggedIn) {
+
+      return (
+          <div className="offline-message">
+              <p>Please log in to access your profile.</p>
+          </div>
+      );
+  }
 //CreatePost HandleSubmit 
       const createPostHandleSubmit = async (event) => {
         event.preventDefault();
@@ -121,18 +132,18 @@ const Profile = ({isLoggedIn}) => {
       };
 //New Product form
       const NewPostForm = (
-        <form onSubmit={createPostHandleSubmit}>
-            <label>Title:</label>
-            <input type="text" name="title" value={productData.title} onChange={createPostHandleInputChange} />
+        <form onSubmit={createPostHandleSubmit} className='modal-form'>
+            <label className='form-label'>Title:</label>
+            <input className="form-input" type="text" name="title" value={productData.title} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Author:</label>
-            <input type="text" name="author" value={productData.author} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Author:</label>
+            <input className="form-input" type="text" name="author" value={productData.author} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Price:</label>
-            <input type="number" name="price" value={productData.price} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Price:</label>
+            <input className="form-input" type="number" name="price" value={productData.price} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Category:</label>
-            <select name="category" value={productData.category} onChange={createPostHandleInputChange}>
+            <label className='form-label'>Category:</label>
+            <select className="form-select" name="category" value={productData.category} onChange={createPostHandleInputChange}>
               <option value="">Select a category</option>
               <option value="Action and Adventure">Action and Adventure</option>
               <option value="Art and Photography">Art and Photography</option>
@@ -169,31 +180,31 @@ const Profile = ({isLoggedIn}) => {
               <option value="Young Adult">Young Adult</option>
             </select>
             <br/>
-            <label>Format:</label>
-            <input type="text" name="format" value={productData.format} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Format:</label>
+            <input className="form-input" type="text" name="format" value={productData.format} onChange={createPostHandleInputChange} />
             <br/>
-           <label>Overview:</label>
-            <input type="text" name="overview" value={productData.overview} onChange={createPostHandleInputChange} />
+           <label className='form-label'>Overview:</label>
+            <input className="form-input" type="text" name="overview" value={productData.overview} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Availability:</label>
-            <input type="checkbox" name="isactive" value={productData.isactive} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Availability:</label>
+            <input className="form-input" type="checkbox" name="isactive" value={productData.isactive} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Quantity:</label>
-            <input type="number" name="qtyavailable" value={productData.qtyavailable} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Quantity:</label>
+            <input className="form-input" type="number" name="qtyavailable" value={productData.qtyavailable} onChange={createPostHandleInputChange} />
             <br/>
-            <label>Image URL:</label>
-            <input type="text" name="imgurl" value={productData.imageurl} onChange={createPostHandleInputChange} />
+            <label className='form-label'>Image URL:</label>
+            <input className="form-input" type="text" name="imgurl" value={productData.imageurl} onChange={createPostHandleInputChange} />
             <br/>
-            <button type="submit">Create Product</button>
+            <button type="submit" className="profile-button" >Create Product</button>
         </form>
     );
     
   return (
-    <div className='admin'>
+    <div className='profile'>
  <div className='left-profile'> 
     <h1>My Profile</h1>
-
-      <div>
+  
+      <div className='profile-info'>
         <img src={userImg} alt="Profile" width="100%" />
         <h1 className='profile-username'>Username: {profileData.username}</h1>
         <p className='profile-email'>Email address: {profileData.useremail}</p>
@@ -206,25 +217,26 @@ const Profile = ({isLoggedIn}) => {
             
             {profileData.isadmin ? (
 
-                <section>
-                  <h1>Site Administration</h1>
-                    <h3>Authentication and Authorization</h3>
-                    <h5 onClick={openUserModal}>All User Information</h5>
+                <section className='admin-profile'>
+                  <h1 className='admin-title'>Site Administration</h1>
+                    <h4 onClick={openUserModal}>All User Information</h4>
                     {isUserModalOpen && (
                         <Modal title="All Users" closeModal={closeUserModal}>
                             {renderUserTable()}
                         </Modal>
                     )}
                     <section>
-                        <h3>Products</h3>
-                        <Link to="/adminproducts"><h5>All Products</h5></Link>
-                        <h5 onClick={openNewPostModal}>Create new Product</h5>
+
+                        <Link to="/adminproducts" className="all-products-link"><h4
+                         className='all-product'>All Products</h4>
+                         </Link>
+                        <h4 onClick={openNewPostModal}>Create new Product</h4>
                         {isNewPostModalOpen && (
                             <Modal title="Create New Post" closeModal={closeNewPostModal}>
                                 {isPostSubmitted ? (
                                     <div>
                                         <p>Post has been successfully created!</p>
-                                        <button onClick={closeNewPostModal}>Close</button>
+                                        <br/>
                                     </div>
                                 ) : (
                                     NewPostForm
@@ -234,10 +246,10 @@ const Profile = ({isLoggedIn}) => {
                     </section>
                 </section>
             ) : (
-                // Render an alternative section for non-admin users
+
                 <section>
-                    <h1>User History</h1>
-                    {/* ... (other content for non-admin users) */}
+                    <h1>Order History</h1>
+                    {/* ... Will add Order History or something*/}
                 </section>
             )}
         </div>

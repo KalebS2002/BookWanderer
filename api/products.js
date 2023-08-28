@@ -41,8 +41,8 @@ productsRouter.get("/allproduct", async (req, res, next) => {
 
 
 // POST /api/products - Create new products.
-// Tested it out with Postman and it is working
-productsRouter.post("/", adminAccess, async (req, res, next) => {
+
+productsRouter.post("/", async (req, res, next) => {
   const {
     title,
     author,

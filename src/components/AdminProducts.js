@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import { fetchAllProducts, editProduct, isActiveToFalse, isActivateToTrue } from '../axios-services/products';
 import Modal from './Modal';
+import "../style/Profile.css"
+import { fetchAllUsers } from '../axios-services/users';
 
-
-const AdminProducts = () => {
+const AdminProducts = ({isLoggedIn}) => {
 
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [profileData, setProfileData] = useState({});
+    const [users, setUsers] = useState([]);
     const [editedProduct, setEditedProduct] = useState({
         title: '',
         author: '',
@@ -55,9 +58,13 @@ const AdminProducts = () => {
         }
       };
 
-    useEffect(() => {
-        getProducts();
-      }, []);
+      useEffect(() => {
+        if (isLoggedIn) {
+          getProducts();
+          getUsers();
+        }
+      }, [isLoggedIn]);
+    
 
     const getProducts = async () => {
         try {
@@ -67,7 +74,22 @@ const AdminProducts = () => {
           console.error('Error fetching products:', error);
         }
       };
-
+      const getUsers = async () => {
+        try {
+          const userData = await fetchAllUsers();
+          setUsers(userData.users);
+    
+          if (isLoggedIn) {
+            const userId = sessionStorage.getItem("BWUSERID");
+            const user = userData.users.find(user => user.id === parseInt(userId));
+            if (user) {
+              setProfileData(user);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      };
       const handleDeactivateProduct = async (productId) => {
         try {
           await isActiveToFalse(productId);
@@ -90,7 +112,9 @@ const AdminProducts = () => {
       };
     
   return (
-     <div>
+     <>
+      {isLoggedIn && profileData.isadmin ? (
+      <section>
       <h1>All Products</h1>
       <table>
         <thead>
@@ -101,7 +125,6 @@ const AdminProducts = () => {
             <th>Price</th>
             <th>Availability</th>
 
-            {/* Add more table headers for other attributes */}
           </tr>
         </thead>
         <tbody>
@@ -113,12 +136,12 @@ const AdminProducts = () => {
               <td>${product.price}</td>
               <td>{product.isactive ? 'Active' : 'Inactive'}</td>
               <td>
-        <button onClick={() => handleEdit(product.id)}>Edit</button>
+        <button onClick={() => handleEdit(product.id)} className='profile-button'>Edit</button>
 
         {product.isactive ? (
-        <button onClick={() => handleDeactivateProduct(product.id)}>Deactivate</button>
+        <button onClick={() => handleDeactivateProduct(product.id)} className='profile-button'>Deactivate</button>
            ) : (
-        <button onClick={() => handleReactivateProduct(product.id)}>Reactivate</button>
+        <button onClick={() => handleReactivateProduct(product.id)} className='profile-button'>Reactivate</button>
           )}
               </td>
             </tr>
@@ -127,73 +150,82 @@ const AdminProducts = () => {
       </table>
       {isEditModalOpen && (
         <Modal title="Edit Product" closeModal={handleEditModalClose}>
-          <form onSubmit={handleEditFormSubmit}>
-           <label> Title: </label>
+          <form onSubmit={handleEditFormSubmit} className='modal-form ' >
+           <label className='form-label'> Title: </label>
             <input
+              className="form-input"
               type="text"
               name="title"
               value={editedProduct.title}
               onChange={(e) => setEditedProduct({ ...editedProduct, title: e.target.value })}
             />
             <br/>
-            <label>Author:</label>
+            <label className='form-label'>Author:</label>
             <input
+              className="form-input"
               type="text"
               name="author"
               value={editedProduct.author}
               onChange={(e) => setEditedProduct({ ...editedProduct, author: e.target.value })}
             />
             <br/>
-            <label>Price:</label>
+            <label className='form-label'>Price:</label>
             <input
+              className="form-input"
               type="number"
               name="price"
               value={editedProduct.price}
               onChange={(e) => setEditedProduct({ ...editedProduct, price: e.target.value })}
             />
             <br/>
-            <label>Category:</label>
+            <label className='form-label'>Category:</label>
             <input
+              className="form-input"
               type="text"
               name="category"
               value={editedProduct.category}
               onChange={(e) => setEditedProduct({ ...editedProduct, category: e.target.value })}
             />
             <br/>
-            <label>Format:</label>
+            <label className='form-label'>Format:</label>
             <input
+              className="form-input"
               type="text"
               name="format"
               value={editedProduct.format}
               onChange={(e) => setEditedProduct({ ...editedProduct, format: e.target.value })}
             />
             <br/>
-            <label>Overview:</label>
+            <label className='form-label'>Overview:</label>
             <input
+              className="form-input"
               type="text"
               name="overview"
               value={editedProduct.overview}
               onChange={(e) => setEditedProduct({ ...editedProduct, overview: e.target.value })}
             />
             <br/>
-            <label>Availability:</label>
+            <label className='form-label'>Availability:</label>
             <input
+              className="form-input"
               type="checkbox"
               name="isactive"
               value={editedProduct.isactive}
               onChange={(e) => setEditedProduct({ ...editedProduct, isactive: e.target.value })}
             />
             <br/>
-            <label>Quantity:</label>
+            <label className='form-label'>Quantity:</label>
             <input
+              className="form-input"
               type="number"
               name="qtyavailable"
               value={editedProduct.qtyavailable}
               onChange={(e) => setEditedProduct({ ...editedProduct, qtyavailable: e.target.value })}
             />
             <br/>
-            <label>Img Url:</label>
+            <label className='form-label'>Img Url:</label>
             <input
+              className="form-input"
               type="text"
               name="imageurl"
               value={editedProduct.imageurl}
@@ -202,11 +234,19 @@ const AdminProducts = () => {
             <br/>
             
 
-            <button type="submit">Save Changes</button>
+            <button type="submit" className='profile-button'>Save Changes</button>
           </form>
         </Modal>
-      )}
-    </div>
+        )};
+     </section>
+        ) : (
+          <div className="offline-message">
+          <p>Admin products are only available to logged-in admins.</p>
+        </div>
+        )}
+    </>
+
+    
   )
 }
 
