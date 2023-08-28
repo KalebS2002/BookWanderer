@@ -17,18 +17,17 @@
    padding: 20px;
    margin: 30px;
    font-family: 'Lato', sans-serif;
+   box-shadow: 2px 2px 12px black;
 }
 
 #vPPhoto{
-    position: absolute;
-/* display: flex;
-margin: 62px; */
+position: absolute;
 left: 20%;
 top: 30%;
+border-bottom: 2px solid rgb(144, 105, 8);
+box-shadow: 2px 2px 12px black;
 border-radius: 9px;
-border: 3px solid rgb(93, 88, 3);
-background: #E0C9A6;
-border-bottom: 3px dashed rgb(93, 88, 3);
+background-color: #E0C9A6;
 }
 
 #viewProductPage{
@@ -42,4 +41,14 @@ border-bottom: 3px dashed rgb(93, 88, 3);
 }
 #viewProductATCButton{
   font-size: 18px;
+}
+.return{
+    background-color: black;
+    border-radius: 7px;
+    border: 2px solid black;
+    color: darkgoldenrod;
+    font-weight: bold;
+    margin: 3px;
+    text-decoration: none;
+    transition: 0.6s;
 }
