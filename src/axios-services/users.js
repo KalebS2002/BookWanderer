@@ -29,3 +29,30 @@ export async function login(username, password) {
     console.log(e);
   }
 }
+export async function fetchAllUsers() {
+  try {
+    const response = await fetch('http://localhost:4000/api/users');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    throw error;
+  }
+}
+
+export async function fetchMyProfile() {
+  try {
+    const response = await fetch('http://localhost:4000/api/users/me');
+    
+    if (!response.ok) {
+      const errorResponse = await response.text();
+      console.error('Error response:', errorResponse);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching my profile:', error);
+    throw error;
+  }
+}
