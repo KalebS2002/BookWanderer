@@ -41,10 +41,16 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
       const result = await response.json();
       console.log("addItemToCart:", result);
       if (result?.orderDetail) {
-        let newCount = itemCount + 1;
-        console.log("set itemCount to: ", itemCount);
-        setItemCount(newCount);
-        alert("Added item to cart!");
+        if (result?.orderDetail[0]?.message == "NOT_ENOUGH") {
+          console.log("not enough");
+          alert(
+            "Sorry - there are not more of this item to add to your order."
+          );
+        } else {
+          setItemCount(itemCount + 1);
+          console.log("update itemCount to:", itemCount);
+          alert("Added item to cart!");
+        }
       }
       return result;
     } catch (error) {
@@ -54,16 +60,14 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
 
   return (
     <>
-      <label htmlFor="searchInput" id="searchLabel">
-        Search
-      </label>
-      <input
-        placeholder="search..."
-        type="search"
-        id="searchInput"
-        onChange={(e) => setQuery(e.target.value.toLowerCase())}
-      ></input>
-
+      <div id="searchSection">
+        <input
+          placeholder="search..."
+          type="search"
+          id="searchInput"
+          onChange={(e) => setQuery(e.target.value.toLowerCase())}
+        ></input>
+      </div>
       <div id="productsBody">
         {products
           .filter(
@@ -76,12 +80,14 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
               <div id="productsContainer" key={product.id}>
                 <div className="productCard">{product.title}</div>
                 <div className="productCard">By: {product.author}</div>
-                <div id="imgSection">
-                  <img
-                    id="productImg"
-                    src={product.imageurl}
-                    alt={product.title}
-                  />
+                <div id="test">
+                  <div id="imgSection">
+                    <img
+                      id="productImg"
+                      src={product.imageurl}
+                      alt={product.title}
+                    />
+                  </div>
                 </div>
                 <div className="productCard">{product.format}</div>
                 <div className="productCard">${product.price}</div>

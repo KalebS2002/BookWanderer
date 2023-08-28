@@ -116,7 +116,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
       <section id="orderHeader">
         {itemCount < 1 ? (
           <button id="addPadding" disabled="disabled">
-            <Link to="/checkout">Proceed to Checkout</Link>
+            Proceed to Checkout
           </button>
         ) : (
           <button id="addPadding">
