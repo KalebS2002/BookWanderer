@@ -9,6 +9,7 @@ const {
   getOrderByOrderId,
   getOrderDetailsByIds,
   getOrderStatusById,
+  getProductsById,
   getUserByUsername,
   getUserOrdersByStatus,
   setCurrentOrderToPurchased,
@@ -129,13 +130,14 @@ ordersRouter.post("/", async (req, res, next) => {
 
     if (orderReturn.length > 0) {
       // IF there is a CURRENT order for this userid, set orderid from the returned array
-      console.log("user has CURRENT order ", orderReturn[0]);
+
       orderid = orderReturn[0].id;
+      console.log("user has CURRENT order");
     } else {
       // ELSE create a new order, and set orderid based on the new order.id that was created
       orderReturn = await createOrder({ userid: userid });
-      console.log("new order object ", orderReturn);
       orderid = orderReturn.id;
+      console.log("NEW order created");
     }
     console.log("orderid:", orderid);
 
@@ -160,7 +162,14 @@ ordersRouter.post("/", async (req, res, next) => {
         // update the quantity to be what the user wants to add, PLUS the number there already are
         newDetails.quantity += orderDetail[0].quantity;
       }
-      orderDetail = await updateOrderDetails(newDetails);
+      // get the current product record
+      const prodRecord = await getProductsById(productid);
+      // check to see if the newQty that is going to be set is greater than the product.qtyavailable
+      if (newDetails.quantity > prodRecord.qtyavailable) {
+        orderDetail[0].message = "NOT_ENOUGH";
+      } else {
+        orderDetail = await updateOrderDetails(newDetails);
+      }
     }
 
     if (orderDetail) {
