@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../style/Checkout.css";
 import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
 
-const Checkout = (itemCount, setItemCount) => {
+const Checkout = ({ itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
   const [order, setOrder] = useState([]);
   const [checkOutComplete, setCheckoutComplete] = useState(false);
@@ -30,14 +30,13 @@ const Checkout = (itemCount, setItemCount) => {
 
   async function submitOrder(event) {
     event.preventDefault();
-
     try {
-      console.log("Checkout > PATCH - orderid:", order.id);
+      //console.log("Checkout > PATCH - orderid:", order.id);
       const response = await fetch(`api/orders/${order.id}`, {
         method: "PATCH",
       });
       const result = await response.json();
-      console.log("PATCH result:", result);
+      // console.log("PATCH result:", result);
       if (result?.updatedOrder?.status === "PURCHASED") {
         setCheckoutComplete(true);
         setItemCount(0);
@@ -86,7 +85,10 @@ const Checkout = (itemCount, setItemCount) => {
               </div>
               {checkOutComplete ? (
                 <div className="line">
-                  <h3>Your order is complete. Please note the OrderId.</h3>
+                  <h3>
+                    Thank you for shopping with us. Your order is complete.
+                    Please note your OrderId.
+                  </h3>
                 </div>
               ) : (
                 <button

@@ -59,7 +59,9 @@ async function createProduct({
 async function getAllProducts() {
   // return an array of ALL products (both active and inactive)
   try {
-    const { rows: products } = await client.query(`SELECT * FROM products;`);
+    const { rows: products } = await client.query(
+      `SELECT * FROM products ORDER BY title ASC;`
+    );
     return products;
   } catch (error) {
     throw error;
