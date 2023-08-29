@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "../style/ViewProduct.css";
+import "../style/Products.css";
 //pass currentProduct through this function as prop
 
 const ViewProduct = ({ currentProduct }) => {
@@ -36,8 +37,10 @@ const ViewProduct = ({ currentProduct }) => {
 
   return (
     <>
-      <button>
-        <Link to="/products">Return</Link>
+      <button className="return">
+        <Link to="/products" className="cardButtons">
+          Return
+        </Link>
       </button>
       <div id="viewProductPage">
         <div id="vPPhoto">
@@ -45,10 +48,8 @@ const ViewProduct = ({ currentProduct }) => {
         </div>
         <aside>
           <div id="viewItemSection">
-            <div className="viewProductLine">Title:{currentProduct.title}</div>
-            <div className="viewProductLine">
-              Author:{currentProduct.author}
-            </div>
+            <div className="viewProductLine"> {currentProduct.title}</div>
+            <div className="viewProductLine">By: {currentProduct.author}</div>
             {/* <img src={stockImg} alt={currentProduct.title} id="vpI" /> */}
             <div className="viewProductLine">
               Price: ${currentProduct.price}
@@ -65,6 +66,8 @@ const ViewProduct = ({ currentProduct }) => {
 
             {/* use ternery op ex: if isLoggedIn = true return Cart.js else return Login.js */}
             <button
+              className="cardButtons"
+              id="viewProductATCButton"
               onClick={() => {
                 // console.log(product);
                 addItemToCart(currentProduct);
