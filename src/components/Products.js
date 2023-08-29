@@ -93,7 +93,7 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
                       className="cardButtons"
                       id="cartButton"
                       onClick={() => {
-                        addOneItemToCart(product);
+                        addItemToCart(product);
                       }}
                     >
                       <Link
