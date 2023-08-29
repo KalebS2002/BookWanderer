@@ -2,6 +2,12 @@
   color: black;
   font-size: 50px;
   font-family: 'Great Vibes', cursive;
+  animation-name: logoAppear;
+  animation-duration: 3s;
+}
+@keyframes logoAppear {
+  0%   {transform: translateX(100%) ; opacity: 0;}
+  100% { transform: translateX(0%); opacity: 1;}
 }
 
 nav {
@@ -11,7 +17,7 @@ nav {
   padding: 20px;
   border-bottom: 2px solid black;
   flex-wrap: wrap;
-  background-color: white;
+  background-color: whitesmoke;
 }
 
 
@@ -25,6 +31,8 @@ nav {
   color: darkgoldenrod;
   margin: 70px;
   transition: 0.7s;
+  animation-name: logoAppear;
+  animation-duration: 2s;
 }
 
 .link:hover {

@@ -61,6 +61,10 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
   return (
     <>
       <div id="searchSection">
+        <img
+          className="searchIcon"
+          src="https://img.icons8.com/?size=512&id=e4NkZ7kWAD7f&format=png"
+        />
         <input
           placeholder="search..."
           type="search"
