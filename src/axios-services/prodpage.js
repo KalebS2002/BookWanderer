@@ -17,13 +17,13 @@ export async function addOneItemToCart(product) {
         console.log("not enough");
         swal("", "No more available!", "error", {
           button: false,
-          timer: 900,
+          timer: 1600,
         });
       } else {
         data.success = true;
         swal("", "Added to Cart!", "success", {
           button: false,
-          timer: 900,
+          timer: 1000,
         });
       }
     }

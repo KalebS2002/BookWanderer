@@ -49,6 +49,6 @@
  background-color: #e0d4c2;
 }
 .background{
-  margin: 80px;
-  padding: 100px;
+ padding: 30px;
+ max-width: 55%;
 }
