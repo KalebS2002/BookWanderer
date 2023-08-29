@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Products.css";
 import "../style/ViewOrderDetails.css";
-import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
+import books from "../Images/books.png";
 
 const NewCart = ({ itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
   const [currentOrder, setCurrentOrder] = useState([]);
   const [forceRender, setForceRender] = useState(false);
+  const [infoMsg, setInfoMsg] = useState("");
 
   useEffect(() => {
     async function fetchCurrentOrder() {
@@ -34,43 +35,44 @@ const NewCart = ({ itemCount, setItemCount }) => {
 
   async function adjustCart(strAddSub, orderid, productid, curQty) {
     console.log("adjustCart > parm:", strAddSub, orderid, productid, curQty);
+    setInfoMsg("");
     try {
       // get product record for productid
       const prodFetch = await fetch(`api/products/${productid}`);
       const prodResponse = await prodFetch.json();
+      console.log("prodResponse", prodResponse);
       let response = {};
 
-      // verify the product isactive, that there is at least one available, and that the number in the cart doesn't exceed the curQty  in cart
-      if (
-        prodResponse?.isactive &&
-        prodResponse?.qtyavailable > 0 &&
-        prodResponse?.qtyavailable > curQty
-      ) {
-        // if removing detail item, and it is the last item, then run DELETE to remove the orderdetail record from the order
-        if (strAddSub == "DEL") {
-          console.log("adjustCart > DELETE");
-          response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
-            method: "DELETE",
-          });
-        } else {
-          // else change the orderdetail quantity for this item
-          let newQty = strAddSub == "ADD" ? curQty + 1 : curQty - 1;
-          console.log("adjustCart > PATCH > newQty:", newQty);
-          response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ quantity: newQty }),
-          });
-        }
-        const result = await response.json();
-        console.log("adjustCart > result:", result);
-        setForceRender(true);
-        return result;
+      // if DEL, then run DELETE to remove the orderdetail record from the order
+      if (strAddSub == "DEL") {
+        console.log("adjustCart > DELETE");
+        response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
+          method: "DELETE",
+        });
       } else {
-        alert("Sorry - there no more of this item available.");
+        // if trying to add, but there are no more available, setInfoMsg
+        if (strAddSub == "ADD" && prodResponse.qtyavailable <= curQty) {
+          setInfoMsg(
+            "Insufficient quantity to add more : " + prodResponse.title
+          );
+          setForceRender(true);
+          return;
+        }
+        // else change the orderdetail quantity for this item
+        let newQty = strAddSub == "ADD" ? curQty + 1 : curQty - 1;
+        console.log("adjustCart > PATCH > newQty:", newQty);
+        response = await fetch(`api/orderdetails/${orderid}/${productid}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity: newQty }),
+        });
       }
+      const result = await response.json();
+      console.log("adjustCart > result:", result);
+      setForceRender(true);
+      return result;
     } catch (error) {
       console.error(`An error occured when adjusting cart item.`);
     }
@@ -98,7 +100,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
   if (Array.isArray(currentOrder)) {
     return (
       <section id="textCenter">
-        <button id="addPadding" disabled="disabled">
+        <button id="addPadding" disabled="disabled" className="cardButtons">
           Proceed to Checkout
         </button>
         <button id="addPadding">
@@ -106,7 +108,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
         </button>
         <h2>There are no items in your shopping cart.</h2>
         <h2>Select PRODUCTS to start adding items to your cart.</h2>
-        <img className="background" src={LandingPage_Background}></img>
+        <img className="background" src={books}></img>
       </section>
     );
   }
@@ -115,18 +117,19 @@ const NewCart = ({ itemCount, setItemCount }) => {
     <>
       <section id="orderHeader">
         {itemCount < 1 ? (
-          <button id="addPadding" disabled="disabled">
+          <button id="addPadding" disabled="disabled" className="cardButtons">
             <Link to="/checkout">Proceed to Checkout</Link>
           </button>
         ) : (
-          <button id="addPadding">
+          <button id="addPadding" className="cardButtons">
             <Link to="/checkout">Proceed to Checkout</Link>
           </button>
         )}
-
         <button id="addPadding">
           <Link to="/products">Continue Shopping</Link>
         </button>
+        <span id="infoMsg">{infoMsg}</span>
+
         <div>CURRENT cart items for Order ID: {currentOrder.id}</div>
         <div>Number of Items: {currentOrder.totalitemcount}</div>
         <div>Order Total: ${currentOrder.ordertotal}</div>
