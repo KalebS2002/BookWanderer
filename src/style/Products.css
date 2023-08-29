@@ -19,13 +19,21 @@
    min-height: 275px;
    text-align: center;
    width: 100%;
-   transition: 0.6s;
+   transition: 0.5s;
    background-color: white;
    font-family: 'Lato', sans-serif;
+   animation: focus;
+   animation-duration: 0.8s;
 }
+@keyframes focus {
+    0% { filter: blur(5px); opacity: 0;} 
+    50% {  filter: blur(2px); opacity: 0;}
+    100% {}
+ }
 
 #productsContainer:hover{
-
+    background-color: rgb(171, 169, 169);
+    color: white;
 }
 
 
@@ -51,14 +59,12 @@
     background-color: black;
     border-radius: 7px;
     border: 2px solid black;
-    color: darkgoldenrod;
+    color: rgb(244, 196, 74);
     font-weight: bold;
     margin: 3px;
     text-decoration: none;
     transition: 0.6s;
 }
-
-
 
 .cardButtons:hover{
     color: white;
@@ -67,9 +73,13 @@
 #productImg{
     width: 90px;
     border-bottom: 2px solid rgb(144, 105, 8);
-    box-shadow: 2px 2px 12px black;
-    border-radius: 9px;
+    box-shadow: 2px 2px 6px black;
+    border-radius: 6px;
     background-color: #E0C9A6;
+    padding: 3px;
+    background-image: url(https://image.slidesdocs.com/responsive-images/docs/paper-with-a-vintage-kraft-texture-and-golden-border-pattern-page-border-background-word-template_25b1033c94__1131_1600.jpg);
+    background-position: center;
+    border-right: 1px dashed #877253;
    /* border-radius: 3px; */
    /* background: #E0C9A6; */
    /* border-bottom: 3px dashed black; */
@@ -107,4 +117,14 @@
 
 #searchInput:hover{
     background-color: rgb(255, 255, 255);
+}
+#searchSection{
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    margin-left: 25px;
+}
+
+.searchIcon{
+    height: 25px;
 }
