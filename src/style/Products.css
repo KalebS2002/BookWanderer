@@ -128,3 +128,7 @@
 .searchIcon{
     height: 25px;
 }
+
+#textField{
+    display: none;
+}

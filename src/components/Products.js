@@ -49,7 +49,7 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
         } else {
           setItemCount(itemCount + 1);
           console.log("update itemCount to:", itemCount);
-          alert("Added item to cart!");
+          // alert("Added item to cart!");
         }
       }
       return result;
@@ -112,7 +112,6 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
                       className="cardButtons"
                       id="cartButton"
                       onClick={() => {
-                        // console.log(product);
                         addItemToCart(product);
                       }}
                     >
