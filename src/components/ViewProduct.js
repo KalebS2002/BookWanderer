@@ -2,32 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "../style/ViewProduct.css";
 import "../style/Products.css";
-//pass currentProduct through this function as prop
+import { addOneItemToCart } from "../axios-services/prodpage";
 
 const ViewProduct = ({ currentProduct }) => {
   console.log("single view has", currentProduct);
   const stockImg = currentProduct.imageurl;
 
   async function addItemToCart(product) {
-    console.log("adding this item to cart", currentProduct);
     try {
-      const response = await fetch(`api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quantity: 1,
-          userid: sessionStorage.getItem("BWUSERID"),
-          productid: currentProduct.id,
-          quantity: 1,
-          itemprice: currentProduct.price,
-        }),
-      });
-      const result = await response.json();
-      console.log(result);
-      if (result?.orderDetail) {
-        alert("Added item to cart!");
+      const result = await addOneItemToCart(product);
+      console.log("addItemToCart > result:", result);
+      if (result.success) {
+        setItemCount(itemCount + 1);
+        console.log("update itemCount:", itemCount);
       }
       return result;
     } catch (error) {
@@ -70,7 +57,7 @@ const ViewProduct = ({ currentProduct }) => {
               id="viewProductATCButton"
               onClick={() => {
                 // console.log(product);
-                addItemToCart(currentProduct);
+                addOneItemToCart(currentProduct);
               }}
             >
               Add to Cart

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Products.css";
 import "../style/ViewOrderDetails.css";
-import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
 import books from "../Images/books.png";
 
 const NewCart = ({ itemCount, setItemCount }) => {
