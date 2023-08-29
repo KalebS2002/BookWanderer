@@ -1,13 +1,8 @@
 #LandingIcon{
     border: 2px solid black;
-    border-radius: 12px;
     background-color: antiquewhite;
     box-shadow: 12px 2px 12px black;
-    padding: 30px;
-    margin: 70px;
-    width: 90%;
-    animation-name: logoAppear;
-    animation-duration: 3s;
+    width: 100%;
 }
 
 

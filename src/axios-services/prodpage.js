@@ -1,4 +1,5 @@
 import axios from "axios";
+import swal from "sweetalert";
 
 export async function addOneItemToCart(product) {
   console.log("axios addOneItemToCart", product);
@@ -14,10 +15,14 @@ export async function addOneItemToCart(product) {
     if (data?.orderDetail) {
       if (data?.orderDetail[0]?.message == "NOT_ENOUGH") {
         console.log("not enough");
-        alert("Sorry - there are not more of this item to add to your order.");
+        swal("", "No more available!", "error", {
+          button: false,
+        });
       } else {
         data.success = true;
-        alert("Added item to cart!");
+        swal("", "Added to Cart!", "success", {
+          button: false,
+        });
       }
     }
     return data;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "../style/Products.css";
 import swal from "sweetalert";
+import { addOneItemToCart } from "../axios-services/prodpage";
 
 const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
@@ -25,33 +26,12 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
   }, []);
 
   async function addItemToCart(product) {
-    console.log("adding this item to cart", product);
     try {
-      const response = await fetch(`api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userid: userId,
-          productid: product.id,
-          itemprice: product.price,
-          quantity: 1,
-        }),
-      });
-      const result = await response.json();
-      console.log("addItemToCart:", result);
-      if (result?.orderDetail) {
-        if (result?.orderDetail[0]?.message == "NOT_ENOUGH") {
-          console.log("not enough");
-          alert(
-            "Sorry - there are not more of this item to add to your order."
-          );
-        } else {
-          setItemCount(itemCount + 1);
-          console.log("update itemCount to:", itemCount);
-          // alert("Added item to cart!");
-        }
+      const result = await addOneItemToCart(product);
+      console.log("addItemToCart > result:", result);
+      if (result.success) {
+        setItemCount(itemCount + 1);
+        console.log("update itemCount:", itemCount);
       }
       return result;
     } catch (error) {
@@ -113,11 +93,7 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
                       className="cardButtons"
                       id="cartButton"
                       onClick={() => {
-                        addItemToCart(product);
-                        // swal("", "Added to Cart!", "success");
-                        swal("", "Added to Cart!", "success", {
-                          button: false,
-                        });
+                        addOneItemToCart(product);
                       }}
                     >
                       <Link
