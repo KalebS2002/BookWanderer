@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../style/Products.css";
 import "../style/ViewOrderDetails.css";
 import LandingPage_Background from "../Images/BookWanderer_LandingPageBackground.png";
+import books from "../Images/books.png";
 
 const NewCart = ({ itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
@@ -98,15 +99,17 @@ const NewCart = ({ itemCount, setItemCount }) => {
   if (Array.isArray(currentOrder)) {
     return (
       <section id="textCenter">
-        <button id="addPadding" disabled="disabled">
+        <button id="addPadding" disabled="disabled" className="cardButtons">
           Proceed to Checkout
         </button>
-        <button id="addPadding">
-          <Link to="/products">Continue Shopping</Link>
+        <button id="addPadding" className="cardButtons">
+          <Link to="/products" className="cardButtons">
+            Continue Shopping
+          </Link>
         </button>
         <h2>There are no items in your shopping cart.</h2>
         <h2>Select PRODUCTS to start adding items to your cart.</h2>
-        <img className="background" src={LandingPage_Background}></img>
+        <img className="background" src={books}></img>
       </section>
     );
   }
@@ -119,13 +122,17 @@ const NewCart = ({ itemCount, setItemCount }) => {
             Proceed to Checkout
           </button>
         ) : (
-          <button id="addPadding">
-            <Link to="/checkout">Proceed to Checkout</Link>
+          <button id="addPadding" className="cardButtons">
+            <Link to="/checkout" className="cardButtons">
+              Proceed to Checkout
+            </Link>
           </button>
         )}
 
-        <button id="addPadding">
-          <Link to="/products">Continue Shopping</Link>
+        <button id="addPadding" className="cardButtons">
+          <Link to="/products" className="cardButtons">
+            Continue Shopping
+          </Link>
         </button>
         <div>CURRENT cart items for Order ID: {currentOrder.id}</div>
         <div>Number of Items: {currentOrder.totalitemcount}</div>

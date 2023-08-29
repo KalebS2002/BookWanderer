@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "../style/Products.css";
+import swal from "sweetalert";
 
 const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
@@ -113,6 +114,10 @@ const Products = ({ setCurrentProduct, itemCount, setItemCount }) => {
                       id="cartButton"
                       onClick={() => {
                         addItemToCart(product);
+                        // swal("", "Added to Cart!", "success");
+                        swal("", "Added to Cart!", "success", {
+                          button: false,
+                        });
                       }}
                     >
                       <Link
