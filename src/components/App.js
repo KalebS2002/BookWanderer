@@ -71,6 +71,8 @@ const App = () => {
           <ViewProduct
             currentProduct={currentProduct}
             setCurrentProduct={setCurrentProduct}
+            itemCount={itemCount}
+            setItemCount={setItemCount}
           />
         </Route>
 

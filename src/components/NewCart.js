@@ -100,7 +100,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
   if (Array.isArray(currentOrder)) {
     return (
       <section id="textCenter">
-        <button id="addPadding" disabled="disabled">
+        <button id="addPadding" disabled="disabled" className="cardButton">
           Proceed to Checkout
         </button>
         <button id="addPadding" className="cardButtons">
@@ -119,7 +119,7 @@ const NewCart = ({ itemCount, setItemCount }) => {
     <>
       <section id="orderHeader">
         {itemCount < 1 ? (
-          <button id="addPadding" disabled="disabled">
+          <button id="addPadding" disabled="disabled" className="cardButton">
             Proceed to Checkout
           </button>
         ) : (

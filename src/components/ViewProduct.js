@@ -4,7 +4,7 @@ import "../style/ViewProduct.css";
 import "../style/Products.css";
 import { addOneItemToCart } from "../axios-services/prodpage";
 
-const ViewProduct = ({ currentProduct }) => {
+const ViewProduct = ({ currentProduct, itemCount, setItemCount }) => {
   console.log("single view has", currentProduct);
   const stockImg = currentProduct.imageurl;
 
@@ -57,7 +57,7 @@ const ViewProduct = ({ currentProduct }) => {
               id="viewProductATCButton"
               onClick={() => {
                 // console.log(product);
-                addOneItemToCart(currentProduct);
+                addItemToCart(currentProduct);
               }}
             >
               Add to Cart
