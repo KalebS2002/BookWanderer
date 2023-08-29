@@ -1,6 +1,4 @@
-#textCenter {
-  text-align: center;
-}
+
 
 #productsBody{
   justify-content: space-evenly;
@@ -26,4 +24,22 @@
 #addPadding {
   margin: 5px 20px;
   padding: 5px 10px;
+}
+
+#orderHeader{
+ display: flex;
+ flex-direction: column;
+ width: 30%;
+ border: 2px solid black;
+ border-radius: 12px;
+ padding: 20px;
+ margin: 30px;
+ font-family: 'Lato', sans-serif;
+ font-size: 18px;
+ box-shadow: 2px 2px 12px black;
+ background-color: #e0d4c2;
+}
+.background{
+  margin: 80px;
+  padding: 100px;
 }

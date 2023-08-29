@@ -47,7 +47,7 @@ const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
               Products
             </Link>
             <Link className="link" to="/newcart">
-              CART {" ("}
+              Cart {" ("}
               {itemCount}
               {")"}
             </Link>
@@ -63,7 +63,7 @@ const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
             )}
             {isLoggedIn && (
               <Link className="link" to="/orderhistory">
-                OrderHistory
+                Order History
               </Link>
             )}
             {isLoggedIn && (
