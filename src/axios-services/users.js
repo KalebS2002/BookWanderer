@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 //takes in username, password, and email and creates new user in DB
 export async function signup(username, password, email) {
   try {
@@ -11,10 +10,10 @@ export async function signup(username, password, email) {
       useremail: email,
     });
     console.log("signupx", data);
-    //if sign up successful, set the BWUSERID to user's id
-    if (data.user)
+    if (data.user) {
       sessionStorage.setItem("BWUSERID", parseInt(data.user.userid));
-    //return the response
+      sessionStorage.setItem("BWUSERNAME", data.user.username);
+    }
     return data;
   } catch (e) {
     console.log(e);
@@ -30,9 +29,10 @@ export async function login(username, password) {
       password: password,
     });
     console.log("login", data);
-    //if log in successful, set the BWUSERID to user's id
-    if (data.user) sessionStorage.setItem("BWUSERID", parseInt(data.user.id));
-    //return the response
+    if (data.user) {
+      sessionStorage.setItem("BWUSERID", parseInt(data.user.id));
+      sessionStorage.setItem("BWUSERNAME", data.user.username);
+    }
     return data;
   } catch (e) {
     console.log(e);
@@ -40,28 +40,28 @@ export async function login(username, password) {
 }
 export async function fetchAllUsers() {
   try {
-    const response = await fetch('/api/users');
+    const response = await fetch("/api/users");
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching all users:', error);
+    console.error("Error fetching all users:", error);
     throw error;
   }
 }
 
 export async function fetchMyProfile() {
   try {
-    const response = await fetch('/api/users/me');
-    
+    const response = await fetch("/api/users/me");
+
     if (!response.ok) {
       const errorResponse = await response.text();
-      console.error('Error response:', errorResponse);
+      console.error("Error response:", errorResponse);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching my profile:', error);
+    console.error("Error fetching my profile:", error);
     throw error;
   }
 }
