@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Nav.css";
+import "../style/Products.css";
 
 const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
   const userId = sessionStorage.getItem("BWUSERID");
+  const username = sessionStorage.getItem("BWUSERNAME");
 
   useEffect(() => {
     async function fetchCurrentOrder() {
@@ -29,6 +31,7 @@ const Nav = ({ isLoggedIn, itemCount, setItemCount }) => {
   return (
     <>
       <div id="nav">
+        {isLoggedIn && <p id="usernameDisplay">Username: {username}</p>}
         <nav>
           <div id="logoSection">
             <img

@@ -8,8 +8,10 @@ export async function signup(username, password, email) {
       useremail: email,
     });
     console.log("signupx", data);
-    if (data.user)
+    if (data.user) {
       sessionStorage.setItem("BWUSERID", parseInt(data.user.userid));
+      sessionStorage.setItem("BWUSERNAME", data.user.username);
+    }
     return data;
   } catch (e) {
     console.log(e);
@@ -23,7 +25,10 @@ export async function login(username, password) {
       password: password,
     });
     console.log("login", data);
-    if (data.user) sessionStorage.setItem("BWUSERID", parseInt(data.user.id));
+    if (data.user) {
+      sessionStorage.setItem("BWUSERID", parseInt(data.user.id));
+      sessionStorage.setItem("BWUSERNAME", data.user.username);
+    }
     return data;
   } catch (e) {
     console.log(e);
@@ -31,28 +36,28 @@ export async function login(username, password) {
 }
 export async function fetchAllUsers() {
   try {
-    const response = await fetch('http://localhost:4000/api/users');
+    const response = await fetch("http://localhost:4000/api/users");
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching all users:', error);
+    console.error("Error fetching all users:", error);
     throw error;
   }
 }
 
 export async function fetchMyProfile() {
   try {
-    const response = await fetch('http://localhost:4000/api/users/me');
-    
+    const response = await fetch("http://localhost:4000/api/users/me");
+
     if (!response.ok) {
       const errorResponse = await response.text();
-      console.error('Error response:', errorResponse);
+      console.error("Error response:", errorResponse);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching my profile:', error);
+    console.error("Error fetching my profile:", error);
     throw error;
   }
 }
