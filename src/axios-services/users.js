@@ -40,7 +40,7 @@ export async function login(username, password) {
 }
 export async function fetchAllUsers() {
   try {
-    const response = await fetch('http://localhost:4000/api/users');
+    const response = await fetch('/api/users');
     const data = await response.json();
     return data;
   } catch (error) {
@@ -51,7 +51,7 @@ export async function fetchAllUsers() {
 
 export async function fetchMyProfile() {
   try {
-    const response = await fetch('http://localhost:4000/api/users/me');
+    const response = await fetch('/api/users/me');
     
     if (!response.ok) {
       const errorResponse = await response.text();
